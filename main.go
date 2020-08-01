@@ -1,17 +1,13 @@
 package main
 
 import (
-	"MarvelousBlog-Backend/common"
-	"MarvelousBlog-Backend/model"
-	"fmt"
+	"MarvelousBlog-Backend/config"
+	r "MarvelousBlog-Backend/router"
+	"github.com/gin-gonic/gin"
 )
 
 func main() {
-	visitor := model.Visitor{Id: "3"}
-	if err := common.Db.Delete(&visitor).Error; err != nil{
-		fmt.Println(err)
-	}
-	//gin.SetMode(common.AppMode)
-	//router := common.SetupRouter()
-	//router.Run(common.ServerPort)
+	gin.SetMode(config.AppMode)
+	router := r.SetupRouter()
+	router.Run(config.ServerPort)
 }

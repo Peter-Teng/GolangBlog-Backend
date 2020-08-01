@@ -5,9 +5,9 @@ import (
 )
 
 type Comment struct {
-	Id string `gorm:"column:id" json:"id"`
-	content string `gorm:"column:content" json:"content"`
-	commentTime *time.Time `gorm:"column:comment_time" json:"comment_time"`
-	VisitorId string `gorm:"column:visitor_id" json:"visitor_id"`
-	ArticleId string `gorm:"column:article_id" json:"article_id"`
+	Id          int64      `gorm:"column:id" json:"id"`
+	Content     string     `gorm:"column:content" json:"content"`
+	CommentTime *time.Time `gorm:"column:comment_time" json:"commentTime"`
+	VisitorId   string     `gorm:"column:visitor_id" json:"visitorId"`
+	ArticleId   string     `gorm:"column:article_id" json:"articleId"`
 }

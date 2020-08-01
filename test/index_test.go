@@ -1,7 +1,7 @@
 package test
 
 import (
-	"MarvelousBlog-Backend/common"
+	router2 "MarvelousBlog-Backend/router"
 	"github.com/stretchr/testify/assert"
 	"net/http"
 	"net/http/httptest"
@@ -9,7 +9,7 @@ import (
 )
 
 func TestIndexGetRouter(t *testing.T) {
-	router := common.SetupRouter()
+	router := router2.SetupRouter()
 	w := httptest.NewRecorder()
 	req, _ := http.NewRequest(http.MethodGet, "/", nil)
 	router.ServeHTTP(w, req)

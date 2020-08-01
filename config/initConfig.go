@@ -1,4 +1,4 @@
-package common
+package config
 
 import (
 	"fmt"
@@ -6,26 +6,26 @@ import (
 )
 
 var (
-	AppMode string
+	AppMode    string
 	ServerPort string
 
-	RedisHost string
-	RedisPort string
+	RedisHost     string
+	RedisPort     string
 	RedisPassword string
 
-	DbSource string
-	DbHost string
-	DbName string
-	DbUser string
-	DbPassword string
-	DbPort string
+	DbSource       string
+	DbHost         string
+	DbName         string
+	DbUser         string
+	DbPassword     string
+	DbPort         string
 	DbMaxIdleConns int
 	DbMaxOpenConns int
 )
 
 func init() {
-	file, error := ini.Load("common/MarvelousBlog-Backend-config.ini")
-	if error != nil {
+	file, err := ini.Load("config/MarvelousBlog-Backend-config.ini")
+	if err != nil {
 		fmt.Println("配置文件读入异常")
 	}
 
