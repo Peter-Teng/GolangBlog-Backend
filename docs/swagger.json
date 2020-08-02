@@ -1,0 +1,158 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "MarvelousBlog-Backend Swagger接口文档",
+        "title": "PP同学个人博客接口文档",
+        "contact": {
+            "name": "PP同学",
+            "email": "710955321@qq.com"
+        },
+        "license": {},
+        "version": "0.1"
+    },
+    "host": "localhost:8600",
+    "paths": {
+        "/v1/visitor/create": {
+            "post": {
+                "description": "输入信息来创建一个visitor",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Visitor接口"
+                ],
+                "summary": "新增visitor用户",
+                "parameters": [
+                    {
+                        "description": "访客电话号码",
+                        "name": "mobile",
+                        "in": "body",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "访客邮箱",
+                        "name": "email",
+                        "in": "body",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "访客昵称",
+                        "name": "nickname",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "访客密码",
+                        "name": "password",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/entity.ResponseBody"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/visitor/info/{id}": {
+            "get": {
+                "description": "在URL中输入ID以获取Visitor信息",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Visitor接口"
+                ],
+                "summary": "获取单个visitor的信息（以id获取）",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "所请求的id参数",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.Visitor"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "entity.ResponseBody": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer"
+                },
+                "message": {
+                    "type": "string",
+                    "example": "Some message about the code."
+                }
+            }
+        },
+        "model.Visitor": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string",
+                    "example": "xxxxx@xx.com"
+                },
+                "id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "lastLoginTime": {
+                    "type": "string",
+                    "example": "2020-08-02T21:20:41+08:00"
+                },
+                "mobile": {
+                    "type": "string",
+                    "example": "13xxxxxxxxx"
+                },
+                "nickname": {
+                    "type": "string",
+                    "example": "PP同学"
+                },
+                "password": {
+                    "type": "string",
+                    "example": "123456"
+                },
+                "registerTime": {
+                    "type": "string",
+                    "example": "2020-08-02T21:20:41+08:00"
+                },
+                "status": {
+                    "type": "integer",
+                    "example": 1
+                }
+            }
+        }
+    }
+}
