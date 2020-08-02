@@ -9,14 +9,14 @@ import (
 )
 
 type Visitor struct {
-	Id            int64      `gorm:"column:id" json:"id"`
-	Mobile        string     `gorm:"column:mobile;default null" json:"mobile"`
-	Email         string     `gorm:"column:email;default null" json:"email"`
-	RegisterTime  *time.Time `gorm:"column:register_time;" json:"registerTime"`
-	Nickname      string     `gorm:"column:nickname" json:"nickname"`
-	Password      string     `gorm:"column:password" json:"password"`
-	LastLoginTime *time.Time `gorm:"column:last_login_time;" json:"lastLoginTime"`
-	Status        int8       `gorm:"column:status;default:1" json:"status"`
+	Id            int64      `gorm:"column:id" json:"id" example:"1"`
+	Mobile        string     `gorm:"column:mobile;default null" json:"mobile" example:"13xxxxxxxxx"`
+	Email         string     `gorm:"column:email;default null" json:"email" example:"xxxxx@xx.com"`
+	RegisterTime  *time.Time `gorm:"column:register_time;" json:"registerTime" example:"2020-08-02T21:20:41+08:00"`
+	Nickname      string     `gorm:"column:nickname" json:"nickname" example:"PP同学"`
+	Password      string     `gorm:"column:password" json:"password" example:"123456"`
+	LastLoginTime *time.Time `gorm:"column:last_login_time;" json:"lastLoginTime" example:"2020-08-02T21:20:41+08:00"`
+	Status        int8       `gorm:"column:status;default:1" json:"status" example:"1"`
 }
 
 //查询visitor用户是否重名
