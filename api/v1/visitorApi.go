@@ -5,6 +5,7 @@ import (
 	"MarvelousBlog-Backend/entity"
 	"MarvelousBlog-Backend/entity/model"
 	"github.com/gin-gonic/gin"
+	"net/http"
 	"strconv"
 )
 
@@ -13,17 +14,16 @@ import (
 // @Description 输入信息来创建一个visitor
 // @Accept  json
 // @Produce json
-// @Param mobile body string false "访客电话号码"
-// @Param email body string false "访客邮箱"
-// @Param nickname body string true "访客昵称"
-// @Param password body string true "访客密码"
-// @Success 201 object entity.ResponseBody
+// @Param visitor body model.CreateVisitorVO true "注册访客信息"
+// @Success 201 object entity.ResponseObject "注册成功"
+// @Failure 403 object entity.ResponseObject "用户名重复"
+// @Failure 500 object entity.ResponseObject "服务器错误"
 // @Router /v1/visitor/create [POST]
 func CreateVisitor(c *gin.Context) {
 	var data model.Visitor
 	_ = c.ShouldBind(&data)
 	status, code := model.CreateVisitor(&data)
-	c.JSON(status, entity.NewResponseBody(code, common.Message[code]))
+	c.JSON(status, entity.NewResponseObject(code, common.Message[code]))
 }
 
 // @Tags Visitor接口
@@ -32,15 +32,21 @@ func CreateVisitor(c *gin.Context) {
 // @Accept  json
 // @Produce json
 // @Param id path int true "所请求的id参数"
-// @Success 200 object model.Visitor
-// @Router /v1/visitor/info/{id} [GET]
+// @Success 200 object model.Visitor "查询成功"
+// @Failure 400 object entity.ResponseObject "输入参数有误"
+// @Failure 404 object entity.ResponseObject "未找到资源"
+// @Router /v1/visitor/{id} [GET]
 func GetVisitor(c *gin.Context) {
-	id, _ := strconv.Atoi(c.Param("id"))
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, entity.NewResponseObject(common.PARAMETER_BAD_REQUEST, common.Message[common.PARAMETER_BAD_REQUEST]))
+		return
+	}
 	status, code, data := model.GetVisitor(id)
 	if status < 300 {
 		c.JSON(status, data)
 	} else {
-		c.JSON(status, entity.NewResponseBody(code, common.Message[code]))
+		c.JSON(status, entity.NewResponseObject(code, common.Message[code]))
 	}
 }
 

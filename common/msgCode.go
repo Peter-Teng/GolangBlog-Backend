@@ -1,8 +1,9 @@
 package common
 
 const (
-	SUCCESS = 200
-	FAIL    = 500
+	SUCCESS               = 200
+	PARAMETER_BAD_REQUEST = 400
+	FAIL                  = 500
 
 	//Visitor 失败状态码
 	NICKNAME_USED          = 1001
@@ -12,8 +13,9 @@ const (
 )
 
 var Message = map[int]string{
-	SUCCESS: "OK",
-	FAIL:    "服务端出现错误，详情请查看日志",
+	SUCCESS:               "OK",
+	PARAMETER_BAD_REQUEST: "参数输入出现错误，请检查输入参数",
+	FAIL:                  "服务端出现错误，详情请查看日志",
 
 	NICKNAME_USED:          "用户名已被使用",
 	NAME_OR_PASSWORD_ERROR: "用户名或密码错误",

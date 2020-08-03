@@ -43,37 +43,12 @@ var doc = `{
                 "summary": "新增visitor用户",
                 "parameters": [
                     {
-                        "description": "访客电话号码",
-                        "name": "mobile",
-                        "in": "body",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "description": "访客邮箱",
-                        "name": "email",
-                        "in": "body",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "description": "访客昵称",
-                        "name": "nickname",
+                        "description": "注册访客信息",
+                        "name": "visitor",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "description": "访客密码",
-                        "name": "password",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/model.CreateVisitorVO"
                         }
                     }
                 ],
@@ -81,13 +56,25 @@ var doc = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/entity.ResponseBody"
+                            "$ref": "#/definitions/entity.ResponseObject"
+                        }
+                    },
+                    "403": {
+                        "description": "用户名重复",
+                        "schema": {
+                            "$ref": "#/definitions/entity.ResponseObject"
+                        }
+                    },
+                    "500": {
+                        "description": "服务器错误",
+                        "schema": {
+                            "$ref": "#/definitions/entity.ResponseObject"
                         }
                     }
                 }
             }
         },
-        "/v1/visitor/info/{id}": {
+        "/v1/visitor/{id}": {
             "get": {
                 "description": "在URL中输入ID以获取Visitor信息",
                 "consumes": [
@@ -115,13 +102,25 @@ var doc = `{
                         "schema": {
                             "$ref": "#/definitions/model.Visitor"
                         }
+                    },
+                    "400": {
+                        "description": "输入参数有误",
+                        "schema": {
+                            "$ref": "#/definitions/entity.ResponseObject"
+                        }
+                    },
+                    "404": {
+                        "description": "未找到资源",
+                        "schema": {
+                            "$ref": "#/definitions/entity.ResponseObject"
+                        }
                     }
                 }
             }
         }
     },
     "definitions": {
-        "entity.ResponseBody": {
+        "entity.ResponseObject": {
             "type": "object",
             "properties": {
                 "code": {
@@ -130,6 +129,27 @@ var doc = `{
                 "message": {
                     "type": "string",
                     "example": "Some message about the code."
+                }
+            }
+        },
+        "model.CreateVisitorVO": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string",
+                    "example": "xxxxx@xx.com"
+                },
+                "mobile": {
+                    "type": "string",
+                    "example": "13xxxxxxxxx"
+                },
+                "nickname": {
+                    "type": "string",
+                    "example": "PP同学"
+                },
+                "password": {
+                    "type": "string",
+                    "example": "123456"
                 }
             }
         },

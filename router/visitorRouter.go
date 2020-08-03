@@ -12,7 +12,7 @@ func LoadVisitorRouters(r *gin.Engine) {
 		router.POST("/create", v1.CreateVisitor)
 
 		//获取单个visitor的信息
-		router.GET("/info/:id", v1.GetVisitor)
+		router.GET("/:id", v1.GetVisitor)
 
 		//获取多个visitor的信息
 		router.GET("/", v1.GetVisitors)

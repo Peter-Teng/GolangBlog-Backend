@@ -27,5 +27,15 @@ func main() {
 	err := router.Run(config.ServerPort)
 	if err != nil {
 		fmt.Println("Service run failed!")
+		closeResources()
 	}
+
+	//关闭资源
+	closeResources()
+}
+
+func closeResources() {
+	config.Log.Info("Service Shutdown!")
+	config.LogFile.Close()
+	config.RedisPool.Close()
 }

@@ -21,8 +21,12 @@ var (
 	DbPort         string
 	DbMaxIdleConns int
 	DbMaxOpenConns int
+
+	LogFilePath string
+	LogFileName string
 )
 
+//从ini文件中读取所有输入变量
 func init() {
 	file, err := ini.Load("config/MarvelousBlog-Backend-config.ini")
 	if err != nil {
@@ -32,6 +36,7 @@ func init() {
 	loadServer(file)
 	loadRedis(file)
 	loadDatabase(file)
+	loadLogging(file)
 }
 
 func loadDatabase(file *ini.File) {
@@ -54,4 +59,9 @@ func loadRedis(file *ini.File) {
 func loadServer(file *ini.File) {
 	AppMode = file.Section("server").Key("AppMode").String()
 	ServerPort = file.Section("server").Key("ServerPort").String()
+}
+
+func loadLogging(file *ini.File) {
+	LogFilePath = file.Section("Logging").Key("LogFilePath").String()
+	LogFileName = file.Section("Logging").Key("LogFileName").String()
 }

@@ -19,6 +19,13 @@ type Visitor struct {
 	Status        int8       `gorm:"column:status;default:1" json:"status" example:"1"`
 }
 
+type CreateVisitorVO struct {
+	Mobile   string `json:"mobile" example:"13xxxxxxxxx"`
+	Email    string `json:"email" example:"xxxxx@xx.com"`
+	Nickname string `json:"nickname" example:"PP同学"`
+	Password string `json:"password" example:"123456"`
+}
+
 //查询visitor用户是否重名
 func nickNameUsed(nickname string) bool {
 	var visitor Visitor
@@ -44,6 +51,7 @@ func CreateVisitor(data *Visitor) (int, int) {
 	return http.StatusCreated, common.SUCCESS
 }
 
+//根据id获取visitor信息
 func GetVisitor(id int) (int, int, Visitor) {
 	var data Visitor
 	c.Db.Where("id = ?", id).First(&data)

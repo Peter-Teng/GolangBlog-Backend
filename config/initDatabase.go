@@ -9,14 +9,16 @@ import (
 )
 
 var Db *gorm.DB
-var err error
 
+//初始化数据库
 func init() {
 	connectionString := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8&parseTime=True&loc=Local",
 		DbUser, DbPassword, DbHost, DbPort, DbName)
+	var err error
 	Db, err = gorm.Open(DbSource, connectionString)
 	if err != nil {
 		fmt.Println()
+		return
 	}
 
 	//设置表名不加s
