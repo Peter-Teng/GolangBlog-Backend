@@ -5,6 +5,7 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
+	"github.com/sirupsen/logrus"
 	"time"
 )
 
@@ -17,7 +18,7 @@ func init() {
 	var err error
 	Db, err = gorm.Open(DbSource, connectionString)
 	if err != nil {
-		fmt.Println()
+		logrus.Error("Database init failed! errMsg = ", err)
 		return
 	}
 

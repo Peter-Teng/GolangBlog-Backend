@@ -3,7 +3,6 @@ package main
 import (
 	"MarvelousBlog-Backend/config"
 	r "MarvelousBlog-Backend/router"
-	"fmt"
 	"github.com/gin-gonic/gin"
 )
 
@@ -26,7 +25,7 @@ func main() {
 	//启动服务
 	err := router.Run(config.ServerPort)
 	if err != nil {
-		fmt.Println("Service run failed!")
+		config.Log.Error("Service run failed! errMsg = ", err)
 		closeResources()
 	}
 
@@ -36,6 +35,7 @@ func main() {
 
 func closeResources() {
 	config.Log.Info("Service Shutdown!")
-	config.LogFile.Close()
-	config.RedisPool.Close()
+	if err := config.RedisPool.Close(); err != nil {
+		config.Log.Error("Redis pool closed error! errMsg = ", err)
+	}
 }

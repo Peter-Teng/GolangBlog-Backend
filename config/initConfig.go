@@ -1,7 +1,7 @@
 package config
 
 import (
-	"fmt"
+	"github.com/sirupsen/logrus"
 	"gopkg.in/ini.v1"
 )
 
@@ -24,13 +24,14 @@ var (
 
 	LogFilePath string
 	LogFileName string
+	LogLevel    string
 )
 
 //从ini文件中读取所有输入变量
 func init() {
 	file, err := ini.Load("config/MarvelousBlog-Backend-config.ini")
 	if err != nil {
-		fmt.Println("配置文件读入异常")
+		logrus.Error("配置文件读入异常, errMsg = ", err)
 	}
 
 	loadServer(file)
@@ -64,4 +65,5 @@ func loadServer(file *ini.File) {
 func loadLogging(file *ini.File) {
 	LogFilePath = file.Section("Logging").Key("LogFilePath").String()
 	LogFileName = file.Section("Logging").Key("LogFileName").String()
+	LogLevel = file.Section("Logging").Key("LogLevel").String()
 }
