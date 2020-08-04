@@ -66,8 +66,8 @@ func GetVisitor(c *gin.Context) {
 // @Failure 404 object entity.ResponseObject "未找到资源"
 // @Router /v1/visitor/list [GET]
 func GetVisitors(c *gin.Context) {
-	pageNum, err := strconv.Atoi(c.DefaultQuery("pageNum", "1"))
-	pageSize, err := strconv.Atoi(c.DefaultQuery("pageSize", "1"))
+	pageNum, err := strconv.Atoi(c.DefaultQuery("pageNum", "-1"))
+	pageSize, err := strconv.Atoi(c.DefaultQuery("pageSize", "-1"))
 	if err != nil {
 		Log.Warnf(common.SYSTEM_ERROR_LOG, "输入参数错误", err)
 		c.JSON(http.StatusBadRequest, entity.NewResponseObject(common.PARAMETER_BAD_REQUEST, common.Message[common.PARAMETER_BAD_REQUEST]))

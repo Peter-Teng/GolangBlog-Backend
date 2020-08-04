@@ -67,9 +67,51 @@ func GetVisitor(id int) (int, int, Visitor) {
 //获取visitor列表
 func ListVisitors(pageSize int, pageNum int) (int, int, []Visitor) {
 	var data []Visitor
-	err := c.Db.Limit(pageSize).Offset((pageNum - 1) * pageNum).Find(&data).Error
-	if err != nil && err != gorm.ErrRecordNotFound {
-		return http.StatusNotFound, common.VISITOR_NOT_FOUND, nil
+	err := c.Db.Limit(pageSize).Offset((pageNum - 1) * pageSize).Find(&data).Error
+	if err != nil {
+		if err != gorm.ErrRecordNotFound {
+			return http.StatusNotFound, common.VISITOR_NOT_FOUND, nil
+		}
+		c.Log.Errorf(common.SYSTEM_ERROR_LOG, "Fail to get Visitors (database), errMsg : ", err)
+		return http.StatusInternalServerError, common.FAIL, nil
 	}
 	return http.StatusOK, common.SUCCESS, data
+}
+
+//修改用户信息
+func ModifyVisitor(id int, data Visitor) (int, int) {
+	var m = make(map[string]interface{})
+	m["mobile"] = data.Mobile
+	m["email"] = data.Email
+	m["nickname"] = data.Nickname
+	err := c.Db.Model(&data).Where("id = ?", id).Updates(m).Error
+	if err != nil {
+		c.Log.Errorf(common.SYSTEM_ERROR_LOG, "Fail to get visitors (database), errMsg : ", err)
+		return http.StatusInternalServerError, common.FAIL
+	}
+	return http.StatusOK, common.SUCCESS
+}
+
+//禁用visitor
+func DisableVisitor(id int) (int, int) {
+	var visitor Visitor
+	var m = make(map[string]interface{})
+	m["status"] = 0
+	err := c.Db.Model(&visitor).Where("id = ?", id).Updates(m).Error
+	if err != nil {
+		c.Log.Errorf(common.SYSTEM_ERROR_LOG, "Fail to disable visitor (database), errMsg : ", err)
+		return http.StatusInternalServerError, common.FAIL
+	}
+	return http.StatusOK, common.SUCCESS
+}
+
+//删除visitor(不推荐)
+func DeleteVisitor(id int) (int, int) {
+	var visitor Visitor
+	err := c.Db.Where("id = ?", id).Delete(&visitor).Error
+	if err != nil {
+		c.Log.Errorf(common.SYSTEM_ERROR_LOG, "Fail to delete visitor (database), errMsg : ", err)
+		return http.StatusInternalServerError, common.FAIL
+	}
+	return http.StatusOK, common.SUCCESS
 }
