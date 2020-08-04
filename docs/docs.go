@@ -54,7 +54,7 @@ var doc = `{
                 ],
                 "responses": {
                     "201": {
-                        "description": "Created",
+                        "description": "注册成功",
                         "schema": {
                             "$ref": "#/definitions/entity.ResponseObject"
                         }
@@ -74,7 +74,7 @@ var doc = `{
                 }
             }
         },
-        "/v1/visitor/{id}": {
+        "/v1/visitor/detail/{id}": {
             "get": {
                 "description": "在URL中输入ID以获取Visitor信息",
                 "consumes": [
@@ -98,9 +98,61 @@ var doc = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "OK",
+                        "description": "查询成功",
                         "schema": {
                             "$ref": "#/definitions/model.Visitor"
+                        }
+                    },
+                    "400": {
+                        "description": "输入参数有误",
+                        "schema": {
+                            "$ref": "#/definitions/entity.ResponseObject"
+                        }
+                    },
+                    "404": {
+                        "description": "未找到资源",
+                        "schema": {
+                            "$ref": "#/definitions/entity.ResponseObject"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/visitor/list": {
+            "get": {
+                "description": "在URL中输入ID以获取Visitor信息",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Visitor接口"
+                ],
+                "summary": "获取多个visitor的信息",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "请求的页表大小",
+                        "name": "pageSize",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "请求的offset",
+                        "name": "pageNum",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "查询成功",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/model.Visitor"
+                            }
                         }
                     },
                     "400": {

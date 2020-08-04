@@ -3,6 +3,7 @@ package model
 import (
 	"MarvelousBlog-Backend/common"
 	c "MarvelousBlog-Backend/config"
+	"github.com/jinzhu/gorm"
 	"net/http"
 	"time"
 )
@@ -59,6 +60,16 @@ func GetVisitor(id int) (int, int, Visitor) {
 	c.Db.Where("id = ?", id).First(&data)
 	if data.Nickname == "" {
 		return http.StatusNotFound, common.VISITOR_NOT_FOUND, data
+	}
+	return http.StatusOK, common.SUCCESS, data
+}
+
+//获取visitor列表
+func ListVisitors(pageSize int, pageNum int) (int, int, []Visitor) {
+	var data []Visitor
+	err := c.Db.Limit(pageSize).Offset((pageNum - 1) * pageNum).Find(&data).Error
+	if err != nil && err != gorm.ErrRecordNotFound {
+		return http.StatusNotFound, common.VISITOR_NOT_FOUND, nil
 	}
 	return http.StatusOK, common.SUCCESS, data
 }

@@ -12,16 +12,18 @@ func LoadVisitorRouters(r *gin.Engine) {
 		router.POST("/create", v1.CreateVisitor)
 
 		//获取单个visitor的信息
-		router.GET("/:id", v1.GetVisitor)
+		router.GET("/detail/:id", v1.GetVisitor)
 
 		//获取多个visitor的信息
-		router.GET("/", v1.GetVisitors)
+		router.GET("/list", v1.GetVisitors)
 
 		//修改visitor信息
 		router.PUT("/modify/:id", v1.ModifyVisitor)
 
-		//禁用某个visitor
-		router.DELETE("/delete/:id", v1.DisableVisitor)
+		//删除某个visitor
+		router.DELETE("/delete/:id", v1.DeleteVisitor)
 
+		//禁用某个visitor
+		router.PATCH("/disable/:id", v1.DisableVisitor)
 	}
 }
