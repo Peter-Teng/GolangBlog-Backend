@@ -1,6 +1,7 @@
 package config
 
 import (
+	"MarvelousBlog-Backend/common"
 	"fmt"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jinzhu/gorm"
@@ -18,7 +19,7 @@ func init() {
 	var err error
 	Db, err = gorm.Open(DbSource, connectionString)
 	if err != nil {
-		logrus.Error("Database init failed! errMsg = ", err)
+		logrus.Errorf(common.SYSTEM_ERROR_LOG, "Database init failed! errMsg = ", err)
 		return
 	}
 

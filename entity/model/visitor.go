@@ -3,7 +3,6 @@ package model
 import (
 	"MarvelousBlog-Backend/common"
 	c "MarvelousBlog-Backend/config"
-	"fmt"
 	"net/http"
 	"time"
 )
@@ -40,12 +39,15 @@ func nickNameUsed(nickname string) bool {
 
 //新增visitor用户
 func CreateVisitor(data *Visitor) (int, int) {
+	if data.Nickname == "" || data.Password == "" {
+		return http.StatusBadRequest, common.EMPTY_VISITOR_INFO
+	}
 	if nicknameUsed := nickNameUsed(data.Nickname); nicknameUsed {
 		return http.StatusForbidden, common.NICKNAME_USED
 	}
 	err := c.Db.Create(&data).Error
 	if err != nil {
-		fmt.Println(err)
+		c.Log.Errorf(common.SYSTEM_ERROR_LOG, "Fail to create Visitor (database), errMsg : ", err)
 		return http.StatusInternalServerError, common.FAIL
 	}
 	return http.StatusCreated, common.SUCCESS

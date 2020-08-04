@@ -2,6 +2,7 @@ package v1
 
 import (
 	"MarvelousBlog-Backend/common"
+	. "MarvelousBlog-Backend/config"
 	"MarvelousBlog-Backend/entity"
 	"MarvelousBlog-Backend/entity/model"
 	"github.com/gin-gonic/gin"
@@ -21,7 +22,9 @@ import (
 // @Router /v1/visitor/create [POST]
 func CreateVisitor(c *gin.Context) {
 	var data model.Visitor
-	_ = c.ShouldBind(&data)
+	if err := c.ShouldBind(&data); err != nil {
+		Log.Errorf(common.SYSTEM_ERROR_LOG, "Json bind error!", err)
+	}
 	status, code := model.CreateVisitor(&data)
 	c.JSON(status, entity.NewResponseObject(code, common.Message[code]))
 }
@@ -39,6 +42,7 @@ func CreateVisitor(c *gin.Context) {
 func GetVisitor(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
+		Log.Warnf(common.SYSTEM_ERROR_LOG, "输入参数错误", err)
 		c.JSON(http.StatusBadRequest, entity.NewResponseObject(common.PARAMETER_BAD_REQUEST, common.Message[common.PARAMETER_BAD_REQUEST]))
 		return
 	}

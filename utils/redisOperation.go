@@ -7,14 +7,14 @@ import (
 )
 
 //封装的Redis Get操作工具函数
-func RedisGet(key string) string {
+func RedisGet(key string) (string, error) {
 	conn := config.RedisPool.Get()
 	defer conn.Close()
 	value, err := redis.String(conn.Do("GET", key))
 	if err != nil {
-		return ""
+		return "", err
 	}
-	return value
+	return value, err
 }
 
 //封装的Redis Set操作工具函数

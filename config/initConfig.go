@@ -1,6 +1,7 @@
 package config
 
 import (
+	"MarvelousBlog-Backend/common"
 	"github.com/sirupsen/logrus"
 	"gopkg.in/ini.v1"
 )
@@ -31,7 +32,7 @@ var (
 func init() {
 	file, err := ini.Load("config/MarvelousBlog-Backend-config.ini")
 	if err != nil {
-		logrus.Error("配置文件读入异常, errMsg = ", err)
+		logrus.Errorf(common.SYSTEM_ERROR_LOG, "配置文件读入异常, errMsg = ", err)
 	}
 
 	loadServer(file)

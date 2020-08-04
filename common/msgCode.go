@@ -10,6 +10,7 @@ const (
 	NAME_OR_PASSWORD_ERROR = 1002
 	VISITOR_DISABLED       = 1003
 	VISITOR_NOT_FOUND      = 1004
+	EMPTY_VISITOR_INFO     = 1005
 )
 
 var Message = map[int]string{
@@ -21,4 +22,5 @@ var Message = map[int]string{
 	NAME_OR_PASSWORD_ERROR: "用户名或密码错误",
 	VISITOR_DISABLED:       "用户已被禁用",
 	VISITOR_NOT_FOUND:      "未能找到该用户",
+	EMPTY_VISITOR_INFO:     "用户名或密码为空",
 }

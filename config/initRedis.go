@@ -1,6 +1,7 @@
 package config
 
 import (
+	"MarvelousBlog-Backend/common"
 	"github.com/garyburd/redigo/redis"
 )
 
@@ -22,6 +23,7 @@ func init() {
 			if RedisPassword != "" {
 				if _, err := conn.Do("AUTH", RedisPassword); err != nil {
 					conn.Close()
+					Log.Errorf(common.SYSTEM_ERROR_LOG, "Redis Authorization failed! errMsg : ", err)
 					return nil, err
 				}
 			}

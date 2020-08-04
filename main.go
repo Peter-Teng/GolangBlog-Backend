@@ -1,7 +1,9 @@
 package main
 
 import (
+	"MarvelousBlog-Backend/common"
 	"MarvelousBlog-Backend/config"
+	"MarvelousBlog-Backend/middleware"
 	r "MarvelousBlog-Backend/router"
 	"github.com/gin-gonic/gin"
 )
@@ -14,7 +16,13 @@ import (
 // @host localhost:8600
 func main() {
 	gin.SetMode(config.AppMode)
-	router := gin.Default()
+	router := gin.New()
+
+	//添加日志中间件
+	router.Use(middleware.LoggingMiddleware())
+
+	//添加错误恢复中间件
+	router.Use(gin.Recovery())
 
 	//加载各类router
 	r.LoadVisitorRouters(router)
@@ -25,7 +33,7 @@ func main() {
 	//启动服务
 	err := router.Run(config.ServerPort)
 	if err != nil {
-		config.Log.Error("Service run failed! errMsg = ", err)
+		config.Log.Errorf(common.SYSTEM_ERROR_LOG, "Service run failed! errMsg = ", err)
 		closeResources()
 	}
 
@@ -36,6 +44,6 @@ func main() {
 func closeResources() {
 	config.Log.Info("Service Shutdown!")
 	if err := config.RedisPool.Close(); err != nil {
-		config.Log.Error("Redis pool closed error! errMsg = ", err)
+		config.Log.Error(common.SYSTEM_ERROR_LOG, "Redis pool closed error! errMsg = ", err)
 	}
 }
