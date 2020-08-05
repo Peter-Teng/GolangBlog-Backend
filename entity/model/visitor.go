@@ -3,6 +3,7 @@ package model
 import (
 	"MarvelousBlog-Backend/common"
 	c "MarvelousBlog-Backend/config"
+	"MarvelousBlog-Backend/utils"
 	"github.com/jinzhu/gorm"
 	"net/http"
 	"time"
@@ -46,9 +47,14 @@ func CreateVisitor(data *Visitor) (int, int) {
 	if nicknameUsed := nickNameUsed(data.Nickname); nicknameUsed {
 		return http.StatusForbidden, common.NICKNAME_USED
 	}
-	err := c.Db.Create(&data).Error
+	var err error
+	if data.Password, err = utils.Encrypt(data.Nickname, data.Password); err != nil {
+		c.Log.Errorf(common.SYSTEM_ERROR_LOG, "Fail to encrypt password", err)
+		return http.StatusInternalServerError, common.FAIL
+	}
+	err = c.Db.Create(&data).Error
 	if err != nil {
-		c.Log.Errorf(common.SYSTEM_ERROR_LOG, "Fail to create Visitor (database), errMsg : ", err)
+		c.Log.Errorf(common.SYSTEM_ERROR_LOG, "Fail to create Visitor (database)", err)
 		return http.StatusInternalServerError, common.FAIL
 	}
 	return http.StatusCreated, common.SUCCESS
@@ -72,7 +78,7 @@ func ListVisitors(pageSize int, pageNum int) (int, int, []Visitor) {
 		if err != gorm.ErrRecordNotFound {
 			return http.StatusNotFound, common.VISITOR_NOT_FOUND, nil
 		}
-		c.Log.Errorf(common.SYSTEM_ERROR_LOG, "Fail to get Visitors (database), errMsg : ", err)
+		c.Log.Errorf(common.SYSTEM_ERROR_LOG, "Fail to get Visitors (database)", err)
 		return http.StatusInternalServerError, common.FAIL, nil
 	}
 	return http.StatusOK, common.SUCCESS, data
@@ -80,26 +86,37 @@ func ListVisitors(pageSize int, pageNum int) (int, int, []Visitor) {
 
 //修改用户信息
 func ModifyVisitor(id int, data Visitor) (int, int) {
+	if data.Nickname == "" {
+		return http.StatusBadRequest, common.EMPTY_VISITOR_INFO
+	}
 	var m = make(map[string]interface{})
 	m["mobile"] = data.Mobile
 	m["email"] = data.Email
 	m["nickname"] = data.Nickname
+	if nicknameUsed := nickNameUsed(data.Nickname); nicknameUsed {
+		return http.StatusForbidden, common.NICKNAME_USED
+	}
 	err := c.Db.Model(&data).Where("id = ?", id).Updates(m).Error
 	if err != nil {
-		c.Log.Errorf(common.SYSTEM_ERROR_LOG, "Fail to get visitors (database), errMsg : ", err)
+		c.Log.Errorf(common.SYSTEM_ERROR_LOG, "Fail to get visitors (database)", err)
 		return http.StatusInternalServerError, common.FAIL
 	}
 	return http.StatusOK, common.SUCCESS
 }
 
-//禁用visitor
-func DisableVisitor(id int) (int, int) {
+//禁用(启用)visitor
+func FlipVisitorStatus(id int) (int, int) {
 	var visitor Visitor
-	var m = make(map[string]interface{})
-	m["status"] = 0
-	err := c.Db.Model(&visitor).Where("id = ?", id).Updates(m).Error
+	err := c.Db.Where("id = ?", id).First(&visitor).Error
 	if err != nil {
-		c.Log.Errorf(common.SYSTEM_ERROR_LOG, "Fail to disable visitor (database), errMsg : ", err)
+		c.Log.Errorf(common.SYSTEM_ERROR_LOG, "Fail to disable visitor (database)", err)
+		return http.StatusInternalServerError, common.FAIL
+	}
+	var m = make(map[string]interface{})
+	m["status"] = 1 - visitor.Status
+	err = c.Db.Model(&visitor).Where("id = ?", id).Updates(m).Error
+	if err != nil {
+		c.Log.Errorf(common.SYSTEM_ERROR_LOG, "Fail to disable visitor (database)", err)
 		return http.StatusInternalServerError, common.FAIL
 	}
 	return http.StatusOK, common.SUCCESS
@@ -110,7 +127,7 @@ func DeleteVisitor(id int) (int, int) {
 	var visitor Visitor
 	err := c.Db.Where("id = ?", id).Delete(&visitor).Error
 	if err != nil {
-		c.Log.Errorf(common.SYSTEM_ERROR_LOG, "Fail to delete visitor (database), errMsg : ", err)
+		c.Log.Errorf(common.SYSTEM_ERROR_LOG, "Fail to delete visitor (database)", err)
 		return http.StatusInternalServerError, common.FAIL
 	}
 	return http.StatusOK, common.SUCCESS

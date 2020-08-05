@@ -58,6 +58,50 @@
                 }
             }
         },
+        "/v1/visitor/delete/{id}": {
+            "delete": {
+                "description": "输入Visitor_id以删除visitor",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Visitor接口"
+                ],
+                "summary": "删除某个visitor",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "删除的visitor id参数",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "删除成功",
+                        "schema": {
+                            "$ref": "#/definitions/entity.ResponseObject"
+                        }
+                    },
+                    "400": {
+                        "description": "输入参数有误",
+                        "schema": {
+                            "$ref": "#/definitions/entity.ResponseObject"
+                        }
+                    },
+                    "500": {
+                        "description": "服务器错误",
+                        "schema": {
+                            "$ref": "#/definitions/entity.ResponseObject"
+                        }
+                    }
+                }
+            }
+        },
         "/v1/visitor/detail/{id}": {
             "get": {
                 "description": "在URL中输入ID以获取Visitor信息",
@@ -102,9 +146,53 @@
                 }
             }
         },
+        "/v1/visitor/disable/{id}": {
+            "patch": {
+                "description": "Flip某个visitor的状态，1-\u003e0;0-\u003e1",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Visitor接口"
+                ],
+                "summary": "禁用(启用)某个visitor",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "禁用的visitor id参数",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "禁用成功",
+                        "schema": {
+                            "$ref": "#/definitions/entity.ResponseObject"
+                        }
+                    },
+                    "400": {
+                        "description": "输入参数有误",
+                        "schema": {
+                            "$ref": "#/definitions/entity.ResponseObject"
+                        }
+                    },
+                    "500": {
+                        "description": "服务器错误",
+                        "schema": {
+                            "$ref": "#/definitions/entity.ResponseObject"
+                        }
+                    }
+                }
+            }
+        },
         "/v1/visitor/list": {
             "get": {
-                "description": "在URL中输入ID以获取Visitor信息",
+                "description": "在URL中输入pageNum, pageSize以拉取Visitor列表信息",
                 "consumes": [
                     "application/json"
                 ],
@@ -147,6 +235,65 @@
                     },
                     "404": {
                         "description": "未找到资源",
+                        "schema": {
+                            "$ref": "#/definitions/entity.ResponseObject"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/visitor/modify/{id}": {
+            "put": {
+                "description": "输入新的Visitor信息以更新信息",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Visitor接口"
+                ],
+                "summary": "修改visitor信息",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "禁用的visitor id参数",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "访客信息",
+                        "name": "visitor",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.CreateVisitorVO"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "修改成功",
+                        "schema": {
+                            "$ref": "#/definitions/entity.ResponseObject"
+                        }
+                    },
+                    "403": {
+                        "description": "用户名重复",
+                        "schema": {
+                            "$ref": "#/definitions/entity.ResponseObject"
+                        }
+                    },
+                    "404": {
+                        "description": "未找到资源",
+                        "schema": {
+                            "$ref": "#/definitions/entity.ResponseObject"
+                        }
+                    },
+                    "500": {
+                        "description": "服务器错误",
                         "schema": {
                             "$ref": "#/definitions/entity.ResponseObject"
                         }

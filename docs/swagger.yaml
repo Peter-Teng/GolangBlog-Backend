@@ -89,6 +89,35 @@ paths:
       summary: 新增visitor用户
       tags:
       - Visitor接口
+  /v1/visitor/delete/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: 输入Visitor_id以删除visitor
+      parameters:
+      - description: 删除的visitor id参数
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 删除成功
+          schema:
+            $ref: '#/definitions/entity.ResponseObject'
+        "400":
+          description: 输入参数有误
+          schema:
+            $ref: '#/definitions/entity.ResponseObject'
+        "500":
+          description: 服务器错误
+          schema:
+            $ref: '#/definitions/entity.ResponseObject'
+      summary: 删除某个visitor
+      tags:
+      - Visitor接口
   /v1/visitor/detail/{id}:
     get:
       consumes:
@@ -118,11 +147,40 @@ paths:
       summary: 获取单个visitor的信息（以id获取）
       tags:
       - Visitor接口
+  /v1/visitor/disable/{id}:
+    patch:
+      consumes:
+      - application/json
+      description: Flip某个visitor的状态，1->0;0->1
+      parameters:
+      - description: 禁用的visitor id参数
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 禁用成功
+          schema:
+            $ref: '#/definitions/entity.ResponseObject'
+        "400":
+          description: 输入参数有误
+          schema:
+            $ref: '#/definitions/entity.ResponseObject'
+        "500":
+          description: 服务器错误
+          schema:
+            $ref: '#/definitions/entity.ResponseObject'
+      summary: 禁用(启用)某个visitor
+      tags:
+      - Visitor接口
   /v1/visitor/list:
     get:
       consumes:
       - application/json
-      description: 在URL中输入ID以获取Visitor信息
+      description: 在URL中输入pageNum, pageSize以拉取Visitor列表信息
       parameters:
       - description: 请求的页表大小
         in: query
@@ -150,6 +208,45 @@ paths:
           schema:
             $ref: '#/definitions/entity.ResponseObject'
       summary: 获取多个visitor的信息
+      tags:
+      - Visitor接口
+  /v1/visitor/modify/{id}:
+    put:
+      consumes:
+      - application/json
+      description: 输入新的Visitor信息以更新信息
+      parameters:
+      - description: 禁用的visitor id参数
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: 访客信息
+        in: body
+        name: visitor
+        required: true
+        schema:
+          $ref: '#/definitions/model.CreateVisitorVO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 修改成功
+          schema:
+            $ref: '#/definitions/entity.ResponseObject'
+        "403":
+          description: 用户名重复
+          schema:
+            $ref: '#/definitions/entity.ResponseObject'
+        "404":
+          description: 未找到资源
+          schema:
+            $ref: '#/definitions/entity.ResponseObject'
+        "500":
+          description: 服务器错误
+          schema:
+            $ref: '#/definitions/entity.ResponseObject'
+      summary: 修改visitor信息
       tags:
       - Visitor接口
 swagger: "2.0"

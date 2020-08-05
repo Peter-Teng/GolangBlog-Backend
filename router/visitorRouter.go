@@ -23,7 +23,8 @@ func LoadVisitorRouters(r *gin.Engine) {
 		//删除某个visitor
 		router.DELETE("/delete/:id", v1.DeleteVisitor)
 
-		//禁用某个visitor
-		router.PATCH("/disable/:id", v1.DisableVisitor)
+		//禁用/启用某个visitor
+		router.PATCH("/flip/:id", v1.FlipVisitorStatus)
+
 	}
 }

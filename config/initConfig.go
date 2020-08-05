@@ -26,6 +26,10 @@ var (
 	LogFilePath string
 	LogFileName string
 	LogLevel    string
+
+	SaltPrefix  string
+	SaltPostfix string
+	JwtSecurity string
 )
 
 //从ini文件中读取所有输入变量
@@ -39,6 +43,7 @@ func init() {
 	loadRedis(file)
 	loadDatabase(file)
 	loadLogging(file)
+	loadSecurity(file)
 }
 
 func loadDatabase(file *ini.File) {
@@ -67,4 +72,10 @@ func loadLogging(file *ini.File) {
 	LogFilePath = file.Section("Logging").Key("LogFilePath").String()
 	LogFileName = file.Section("Logging").Key("LogFileName").String()
 	LogLevel = file.Section("Logging").Key("LogLevel").String()
+}
+
+func loadSecurity(file *ini.File) {
+	SaltPrefix = file.Section("Security").Key("SaltPrefix").String()
+	SaltPostfix = file.Section("Security").Key("SaltPostfix").String()
+	JwtSecurity = file.Section("Security").Key("JwtSecurity").String()
 }

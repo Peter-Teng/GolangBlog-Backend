@@ -54,11 +54,12 @@ func main() {
 	// kill -9 is syscall. SIGKILL but can"t be catch, so don't need add it
 	signal.Notify(exit, syscall.SIGINT, syscall.SIGTERM)
 	<-exit
-	config.Log.Infof(common.SYSTEM_INFO_LOG, "Shutdown Server ...")
+	config.Log.Infof(common.SYSTEM_INFO_LOG, "Shutting Down Server ...")
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 
 	//关闭资源
 	defer closeResources()
+
 	defer cancel()
 	if err := server.Shutdown(ctx); err != nil {
 		config.Log.Errorf(common.SYSTEM_ERROR_LOG, "Server Shutdown Error Encountered:", err)
@@ -72,7 +73,7 @@ func main() {
 }
 
 func closeResources() {
-	config.Log.Info("Service Shutdown!")
+	config.Log.Infof(common.SYSTEM_INFO_LOG, "Resources Closing")
 	if err := config.RedisPool.Close(); err != nil {
 		config.Log.Error(common.SYSTEM_ERROR_LOG, "Redis pool closed error! errMsg = ", err)
 	}
