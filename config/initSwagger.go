@@ -9,6 +9,6 @@ import (
 
 //初始化swagger文档
 func InitSwaggerRouter(r *gin.Engine) {
-	url := ginSwagger.URL("http://localhost" + ServerPort + "/swagger/doc.json")
+	url := ginSwagger.URL("http://127.0.0.1" + ServerPort + "/swagger/doc.json")
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler, url))
 }
