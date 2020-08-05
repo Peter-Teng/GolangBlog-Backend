@@ -126,7 +126,7 @@ func ModifyVisitor(c *gin.Context) {
 // @Success 200 object entity.ResponseObject "禁用成功"
 // @Failure 400 object entity.ResponseObject "输入参数有误"
 // @Failure 500 object entity.ResponseObject "服务器错误"
-// @Router /v1/visitor/disable/{id} [PATCH]
+// @Router /v1/visitor/flip/{id} [PATCH]
 func FlipVisitorStatus(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
@@ -148,7 +148,7 @@ func FlipVisitorStatus(c *gin.Context) {
 // @Accept  json
 // @Produce json
 // @Param id path int true "删除的visitor id参数"
-// @Success 200 object entity.ResponseObject "删除成功"
+// @Success 204 "删除成功"
 // @Failure 400 object entity.ResponseObject "输入参数有误"
 // @Failure 500 object entity.ResponseObject "服务器错误"
 // @Router /v1/visitor/delete/{id}  [DELETE]

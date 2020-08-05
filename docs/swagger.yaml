@@ -103,10 +103,8 @@ paths:
       produces:
       - application/json
       responses:
-        "200":
+        "204":
           description: 删除成功
-          schema:
-            $ref: '#/definitions/entity.ResponseObject'
         "400":
           description: 输入参数有误
           schema:
@@ -147,7 +145,7 @@ paths:
       summary: 获取单个visitor的信息（以id获取）
       tags:
       - Visitor接口
-  /v1/visitor/disable/{id}:
+  /v1/visitor/flip/{id}:
     patch:
       consumes:
       - application/json

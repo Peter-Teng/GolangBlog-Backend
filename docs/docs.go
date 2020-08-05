@@ -97,11 +97,8 @@ var doc = `{
                     }
                 ],
                 "responses": {
-                    "200": {
-                        "description": "删除成功",
-                        "schema": {
-                            "$ref": "#/definitions/entity.ResponseObject"
-                        }
+                    "204": {
+                        "description": "删除成功"
                     },
                     "400": {
                         "description": "输入参数有误",
@@ -162,7 +159,7 @@ var doc = `{
                 }
             }
         },
-        "/v1/visitor/disable/{id}": {
+        "/v1/visitor/flip/{id}": {
             "patch": {
                 "description": "Flip某个visitor的状态，1-\u003e0;0-\u003e1",
                 "consumes": [

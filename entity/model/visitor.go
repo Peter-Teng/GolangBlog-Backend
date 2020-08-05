@@ -130,5 +130,5 @@ func DeleteVisitor(id int) (int, int) {
 		c.Log.Errorf(common.SYSTEM_ERROR_LOG, "Fail to delete visitor (database)", err)
 		return http.StatusInternalServerError, common.FAIL
 	}
-	return http.StatusOK, common.SUCCESS
+	return http.StatusNoContent, common.SUCCESS
 }

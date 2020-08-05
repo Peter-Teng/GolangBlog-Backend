@@ -30,6 +30,9 @@ func main() {
 	//添加错误恢复中间件
 	engine.Use(gin.Recovery())
 
+	//添加跨域中间件
+	engine.Use(middleware.CORS())
+
 	//加载各类router
 	r.LoadVisitorRouters(engine)
 
