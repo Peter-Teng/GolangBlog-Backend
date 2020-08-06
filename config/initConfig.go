@@ -8,6 +8,7 @@ import (
 
 var (
 	AppMode    string
+	ServerHost string
 	ServerPort string
 
 	RedisHost     string
@@ -66,6 +67,7 @@ func loadRedis(file *ini.File) {
 func loadServer(file *ini.File) {
 	AppMode = file.Section("server").Key("AppMode").String()
 	ServerPort = file.Section("server").Key("ServerPort").String()
+	ServerHost = file.Section("server").Key("ServerHost").String()
 }
 
 func loadLogging(file *ini.File) {

@@ -19,8 +19,11 @@ import (
 // @description MarvelousBlog-Backend Swagger接口文档
 // @contact.name PP同学
 // @contact.email 710955321@qq.com
-// @host localhost:8600
+// @securityDefinitions.apikey ApiKeyAuth
+// @in header
+// @name Authorization
 func main() {
+
 	gin.SetMode(config.AppMode)
 	engine := gin.New()
 
@@ -31,7 +34,7 @@ func main() {
 	engine.Use(gin.Recovery())
 
 	//添加跨域中间件
-	engine.Use(middleware.CORS())
+	//engine.Use(middleware.CORS())
 
 	//加载各类router
 	r.LoadVisitorRouters(engine)

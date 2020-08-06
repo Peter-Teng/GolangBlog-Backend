@@ -76,6 +76,11 @@ var doc = `{
         },
         "/v1/visitor/delete/{id}": {
             "delete": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "输入Visitor_id以删除visitor",
                 "consumes": [
                     "application/json"
@@ -106,6 +111,12 @@ var doc = `{
                             "$ref": "#/definitions/entity.ResponseObject"
                         }
                     },
+                    "402": {
+                        "description": "用户未授权",
+                        "schema": {
+                            "$ref": "#/definitions/entity.ResponseObject"
+                        }
+                    },
                     "500": {
                         "description": "服务器错误",
                         "schema": {
@@ -117,6 +128,11 @@ var doc = `{
         },
         "/v1/visitor/detail/{id}": {
             "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "在URL中输入ID以获取Visitor信息",
                 "consumes": [
                     "application/json"
@@ -150,6 +166,12 @@ var doc = `{
                             "$ref": "#/definitions/entity.ResponseObject"
                         }
                     },
+                    "402": {
+                        "description": "用户未授权",
+                        "schema": {
+                            "$ref": "#/definitions/entity.ResponseObject"
+                        }
+                    },
                     "404": {
                         "description": "未找到资源",
                         "schema": {
@@ -161,6 +183,11 @@ var doc = `{
         },
         "/v1/visitor/flip/{id}": {
             "patch": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "Flip某个visitor的状态，1-\u003e0;0-\u003e1",
                 "consumes": [
                     "application/json"
@@ -194,6 +221,12 @@ var doc = `{
                             "$ref": "#/definitions/entity.ResponseObject"
                         }
                     },
+                    "402": {
+                        "description": "用户未授权",
+                        "schema": {
+                            "$ref": "#/definitions/entity.ResponseObject"
+                        }
+                    },
                     "500": {
                         "description": "服务器错误",
                         "schema": {
@@ -205,6 +238,11 @@ var doc = `{
         },
         "/v1/visitor/list": {
             "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "在URL中输入pageNum, pageSize以拉取Visitor列表信息",
                 "consumes": [
                     "application/json"
@@ -246,6 +284,12 @@ var doc = `{
                             "$ref": "#/definitions/entity.ResponseObject"
                         }
                     },
+                    "402": {
+                        "description": "用户未授权",
+                        "schema": {
+                            "$ref": "#/definitions/entity.ResponseObject"
+                        }
+                    },
                     "404": {
                         "description": "未找到资源",
                         "schema": {
@@ -255,8 +299,65 @@ var doc = `{
                 }
             }
         },
+        "/v1/visitor/login": {
+            "post": {
+                "description": "输入用户名密码以登录",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "登录接口"
+                ],
+                "summary": "visitor登录",
+                "parameters": [
+                    {
+                        "description": "访客登录信息（只需要填写nickname、password）",
+                        "name": "visitor",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.VisitorLoginVo"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "登录成功",
+                        "schema": {
+                            "$ref": "#/definitions/entity.ResponseObject"
+                        }
+                    },
+                    "403": {
+                        "description": "用户名或密码错误",
+                        "schema": {
+                            "$ref": "#/definitions/entity.ResponseObject"
+                        }
+                    },
+                    "404": {
+                        "description": "未找到该用户",
+                        "schema": {
+                            "$ref": "#/definitions/entity.ResponseObject"
+                        }
+                    },
+                    "500": {
+                        "description": "服务器错误",
+                        "schema": {
+                            "$ref": "#/definitions/entity.ResponseObject"
+                        }
+                    }
+                }
+            }
+        },
         "/v1/visitor/modify/{id}": {
             "put": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "输入新的Visitor信息以更新信息",
                 "consumes": [
                     "application/json"
@@ -271,7 +372,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "禁用的visitor id参数",
+                        "description": "修改的visitor id参数",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -289,6 +390,12 @@ var doc = `{
                 "responses": {
                     "200": {
                         "description": "修改成功",
+                        "schema": {
+                            "$ref": "#/definitions/entity.ResponseObject"
+                        }
+                    },
+                    "402": {
+                        "description": "用户未授权",
                         "schema": {
                             "$ref": "#/definitions/entity.ResponseObject"
                         }
@@ -320,7 +427,8 @@ var doc = `{
             "type": "object",
             "properties": {
                 "code": {
-                    "type": "integer"
+                    "type": "string",
+                    "example": "业务响应码（非HTTP码）"
                 },
                 "message": {
                     "type": "string",
@@ -385,6 +493,26 @@ var doc = `{
                     "example": 1
                 }
             }
+        },
+        "model.VisitorLoginVo": {
+            "type": "object",
+            "properties": {
+                "nickname": {
+                    "type": "string",
+                    "example": "PP同学"
+                },
+                "password": {
+                    "type": "string",
+                    "example": "123456"
+                }
+            }
+        }
+    },
+    "securityDefinitions": {
+        "ApiKeyAuth": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
         }
     }
 }`
@@ -401,7 +529,7 @@ type swaggerInfo struct {
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = swaggerInfo{
 	Version:     "0.1",
-	Host:        "localhost:8600",
+	Host:        "",
 	BasePath:    "",
 	Schemes:     []string{},
 	Title:       "PP同学个人博客接口文档",

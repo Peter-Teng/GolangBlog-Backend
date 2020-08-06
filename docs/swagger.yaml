@@ -2,7 +2,8 @@ definitions:
   entity.ResponseObject:
     properties:
       code:
-        type: integer
+        example: 业务响应码（非HTTP码）
+        type: string
       message:
         example: Some message about the code.
         type: string
@@ -49,7 +50,15 @@ definitions:
         example: 1
         type: integer
     type: object
-host: localhost:8600
+  model.VisitorLoginVo:
+    properties:
+      nickname:
+        example: PP同学
+        type: string
+      password:
+        example: "123456"
+        type: string
+    type: object
 info:
   contact:
     email: 710955321@qq.com
@@ -109,10 +118,16 @@ paths:
           description: 输入参数有误
           schema:
             $ref: '#/definitions/entity.ResponseObject'
+        "402":
+          description: 用户未授权
+          schema:
+            $ref: '#/definitions/entity.ResponseObject'
         "500":
           description: 服务器错误
           schema:
             $ref: '#/definitions/entity.ResponseObject'
+      security:
+      - ApiKeyAuth: []
       summary: 删除某个visitor
       tags:
       - Visitor接口
@@ -138,10 +153,16 @@ paths:
           description: 输入参数有误
           schema:
             $ref: '#/definitions/entity.ResponseObject'
+        "402":
+          description: 用户未授权
+          schema:
+            $ref: '#/definitions/entity.ResponseObject'
         "404":
           description: 未找到资源
           schema:
             $ref: '#/definitions/entity.ResponseObject'
+      security:
+      - ApiKeyAuth: []
       summary: 获取单个visitor的信息（以id获取）
       tags:
       - Visitor接口
@@ -167,10 +188,16 @@ paths:
           description: 输入参数有误
           schema:
             $ref: '#/definitions/entity.ResponseObject'
+        "402":
+          description: 用户未授权
+          schema:
+            $ref: '#/definitions/entity.ResponseObject'
         "500":
           description: 服务器错误
           schema:
             $ref: '#/definitions/entity.ResponseObject'
+      security:
+      - ApiKeyAuth: []
       summary: 禁用(启用)某个visitor
       tags:
       - Visitor接口
@@ -201,20 +228,60 @@ paths:
           description: 输入参数有误
           schema:
             $ref: '#/definitions/entity.ResponseObject'
+        "402":
+          description: 用户未授权
+          schema:
+            $ref: '#/definitions/entity.ResponseObject'
         "404":
           description: 未找到资源
           schema:
             $ref: '#/definitions/entity.ResponseObject'
+      security:
+      - ApiKeyAuth: []
       summary: 获取多个visitor的信息
       tags:
       - Visitor接口
+  /v1/visitor/login:
+    post:
+      consumes:
+      - application/json
+      description: 输入用户名密码以登录
+      parameters:
+      - description: 访客登录信息（只需要填写nickname、password）
+        in: body
+        name: visitor
+        required: true
+        schema:
+          $ref: '#/definitions/model.VisitorLoginVo'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 登录成功
+          schema:
+            $ref: '#/definitions/entity.ResponseObject'
+        "403":
+          description: 用户名或密码错误
+          schema:
+            $ref: '#/definitions/entity.ResponseObject'
+        "404":
+          description: 未找到该用户
+          schema:
+            $ref: '#/definitions/entity.ResponseObject'
+        "500":
+          description: 服务器错误
+          schema:
+            $ref: '#/definitions/entity.ResponseObject'
+      summary: visitor登录
+      tags:
+      - 登录接口
   /v1/visitor/modify/{id}:
     put:
       consumes:
       - application/json
       description: 输入新的Visitor信息以更新信息
       parameters:
-      - description: 禁用的visitor id参数
+      - description: 修改的visitor id参数
         in: path
         name: id
         required: true
@@ -232,6 +299,10 @@ paths:
           description: 修改成功
           schema:
             $ref: '#/definitions/entity.ResponseObject'
+        "402":
+          description: 用户未授权
+          schema:
+            $ref: '#/definitions/entity.ResponseObject'
         "403":
           description: 用户名重复
           schema:
@@ -244,7 +315,14 @@ paths:
           description: 服务器错误
           schema:
             $ref: '#/definitions/entity.ResponseObject'
+      security:
+      - ApiKeyAuth: []
       summary: 修改visitor信息
       tags:
       - Visitor接口
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: Authorization
+    type: apiKey
 swagger: "2.0"

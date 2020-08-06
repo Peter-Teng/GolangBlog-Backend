@@ -1,7 +1,7 @@
 package entity
 
 type ResponseObject struct {
-	Code    int
+	Code    int    `swaggertype:"string" example:"业务响应码（非HTTP码）"`
 	Message string `example:"Some message about the code."`
 }
 
