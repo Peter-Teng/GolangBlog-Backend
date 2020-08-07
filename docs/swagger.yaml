@@ -23,6 +23,15 @@ definitions:
         example: "123456"
         type: string
     type: object
+  model.LoginVo:
+    properties:
+      nickname:
+        example: PP同学
+        type: string
+      password:
+        example: "123456"
+        type: string
+    type: object
   model.Visitor:
     properties:
       email:
@@ -50,15 +59,6 @@ definitions:
         example: 1
         type: integer
     type: object
-  model.VisitorLoginVo:
-    properties:
-      nickname:
-        example: PP同学
-        type: string
-      password:
-        example: "123456"
-        type: string
-    type: object
 info:
   contact:
     email: 710955321@qq.com
@@ -68,6 +68,40 @@ info:
   title: PP同学个人博客接口文档
   version: "0.1"
 paths:
+  /v1/author/login:
+    post:
+      consumes:
+      - application/json
+      description: 输入用户名密码以登录
+      parameters:
+      - description: 作者登录信息
+        in: body
+        name: visitor
+        required: true
+        schema:
+          $ref: '#/definitions/model.LoginVo'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 登录成功
+          schema:
+            $ref: '#/definitions/entity.ResponseObject'
+        "403":
+          description: 用户名或密码错误
+          schema:
+            $ref: '#/definitions/entity.ResponseObject'
+        "404":
+          description: 未找到该用户
+          schema:
+            $ref: '#/definitions/entity.ResponseObject'
+        "500":
+          description: 服务器错误
+          schema:
+            $ref: '#/definitions/entity.ResponseObject'
+      summary: author登录
+      tags:
+      - 登录接口
   /v1/visitor/create:
     post:
       consumes:
@@ -247,12 +281,12 @@ paths:
       - application/json
       description: 输入用户名密码以登录
       parameters:
-      - description: 访客登录信息（只需要填写nickname、password）
+      - description: 访客登录信息
         in: body
         name: visitor
         required: true
         schema:
-          $ref: '#/definitions/model.VisitorLoginVo'
+          $ref: '#/definitions/model.LoginVo'
       produces:
       - application/json
       responses:

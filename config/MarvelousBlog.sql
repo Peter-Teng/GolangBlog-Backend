@@ -4,8 +4,8 @@ use MarvelousBlog;
 
 CREATE TABLE author (
     id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY COMMENT '作者（管理员）id' ,
-    login_name VARCHAR(20) NOT NULL COMMENT '作者（管理员）登录名',
-    password VARCHAR(20) NOT NULL COMMENT '作者（管理员）登录密码',
+    nickname VARCHAR(20) NOT NULL COMMENT '作者（管理员）登录名',
+    password VARCHAR(50) NOT NULL COMMENT '作者（管理员）登录密码',
     avatar VARCHAR(100) DEFAULT NULL COMMENT '作者（管理员）头像',
 	role TINYINT NOT NULL DEFAULT 0  COMMENT '作者身份，1为站主，0为普通作者'
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;

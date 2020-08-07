@@ -28,6 +28,58 @@ var doc = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/v1/author/login": {
+            "post": {
+                "description": "输入用户名密码以登录",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "登录接口"
+                ],
+                "summary": "author登录",
+                "parameters": [
+                    {
+                        "description": "作者登录信息",
+                        "name": "visitor",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.LoginVo"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "登录成功",
+                        "schema": {
+                            "$ref": "#/definitions/entity.ResponseObject"
+                        }
+                    },
+                    "403": {
+                        "description": "用户名或密码错误",
+                        "schema": {
+                            "$ref": "#/definitions/entity.ResponseObject"
+                        }
+                    },
+                    "404": {
+                        "description": "未找到该用户",
+                        "schema": {
+                            "$ref": "#/definitions/entity.ResponseObject"
+                        }
+                    },
+                    "500": {
+                        "description": "服务器错误",
+                        "schema": {
+                            "$ref": "#/definitions/entity.ResponseObject"
+                        }
+                    }
+                }
+            }
+        },
         "/v1/visitor/create": {
             "post": {
                 "description": "输入信息来创建一个visitor",
@@ -314,12 +366,12 @@ var doc = `{
                 "summary": "visitor登录",
                 "parameters": [
                     {
-                        "description": "访客登录信息（只需要填写nickname、password）",
+                        "description": "访客登录信息",
                         "name": "visitor",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/model.VisitorLoginVo"
+                            "$ref": "#/definitions/model.LoginVo"
                         }
                     }
                 ],
@@ -457,6 +509,19 @@ var doc = `{
                 }
             }
         },
+        "model.LoginVo": {
+            "type": "object",
+            "properties": {
+                "nickname": {
+                    "type": "string",
+                    "example": "PP同学"
+                },
+                "password": {
+                    "type": "string",
+                    "example": "123456"
+                }
+            }
+        },
         "model.Visitor": {
             "type": "object",
             "properties": {
@@ -491,19 +556,6 @@ var doc = `{
                 "status": {
                     "type": "integer",
                     "example": 1
-                }
-            }
-        },
-        "model.VisitorLoginVo": {
-            "type": "object",
-            "properties": {
-                "nickname": {
-                    "type": "string",
-                    "example": "PP同学"
-                },
-                "password": {
-                    "type": "string",
-                    "example": "123456"
                 }
             }
         }

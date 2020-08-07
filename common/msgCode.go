@@ -6,11 +6,11 @@ const (
 	UNAUTHORIZED          = 401
 	FAIL                  = 500
 
-	//Visitor 失败状态码
+	//用户(visitor、author) 相关状态码
 	NICKNAME_USED          = 1001
 	NAME_OR_PASSWORD_ERROR = 1002
 	VISITOR_DISABLED       = 1003
-	VISITOR_NOT_FOUND      = 1004
+	USER_NOT_FOUND         = 1004
 	EMPTY_VISITOR_INFO     = 1005
 
 	//TOKEN 相关状态码
@@ -28,7 +28,7 @@ var Message = map[int]string{
 	NICKNAME_USED:          "用户名已被使用",
 	NAME_OR_PASSWORD_ERROR: "用户名或密码错误",
 	VISITOR_DISABLED:       "用户已被禁用",
-	VISITOR_NOT_FOUND:      "未能找到该用户",
+	USER_NOT_FOUND:         "未能找到该用户",
 	EMPTY_VISITOR_INFO:     "用户名或密码为空",
 
 	TOKEN_WRONG_TYPE:  "TOKEN格式错误（请不要伪造token）",

@@ -22,7 +22,7 @@ type CreateVisitorVO struct {
 	Password string `json:"password" example:"123456"`
 }
 
-type VisitorLoginVo struct {
+type LoginVo struct {
 	Nickname string `json:"nickname" example:"PP同学"`
 	Password string `json:"password" example:"123456"`
 }

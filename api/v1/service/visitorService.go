@@ -47,7 +47,7 @@ func GetVisitor(id int64) (int, int, Visitor) {
 	var data Visitor
 	c.Db.Select("id, mobile, email, nickname, register_time, last_login_time, status").Where("id = ?", id).First(&data)
 	if data.Nickname == "" {
-		return http.StatusNotFound, common.VISITOR_NOT_FOUND, data
+		return http.StatusNotFound, common.USER_NOT_FOUND, data
 	}
 	return http.StatusOK, common.SUCCESS, data
 }
@@ -58,7 +58,7 @@ func ListVisitors(pageSize int, pageNum int) (int, int, []Visitor) {
 	err := c.Db.Limit(pageSize).Offset((pageNum - 1) * pageSize).Find(&data).Error
 	if err != nil {
 		if err != gorm.ErrRecordNotFound {
-			return http.StatusNotFound, common.VISITOR_NOT_FOUND, nil
+			return http.StatusNotFound, common.USER_NOT_FOUND, nil
 		}
 		c.Log.Errorf(common.SYSTEM_ERROR_LOG, "Fail to get Visitors (database)", err)
 		return http.StatusInternalServerError, common.FAIL, nil
