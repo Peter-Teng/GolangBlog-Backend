@@ -196,17 +196,17 @@ func FlipVisitorStatus(c *gin.Context) {
 // @Failure 500 object entity.ResponseObject "服务器错误"
 // @Router /v1/visitor/delete/{id}  [DELETE]
 func DeleteVisitor(c *gin.Context) {
-	id, err := strconv.ParseInt(c.Param("id"), 10, 64)
-	if err != nil {
-		utils.ParameterWarnLog(err)
-		c.JSON(http.StatusBadRequest, entity.NewResponseObject(common.PARAMETER_BAD_REQUEST, common.Message[common.PARAMETER_BAD_REQUEST]))
-		c.Abort()
-		return
-	}
 	claims, _ := c.Get("claims")
 	info := claims.(*utils.BlogClaims)
 	if info.Role != "superAuthor" {
 		c.JSON(http.StatusUnauthorized, entity.NewResponseObject(common.UNAUTHORIZED, common.Message[common.UNAUTHORIZED]))
+		c.Abort()
+		return
+	}
+	id, err := strconv.ParseInt(c.Param("id"), 10, 64)
+	if err != nil {
+		utils.ParameterWarnLog(err)
+		c.JSON(http.StatusBadRequest, entity.NewResponseObject(common.PARAMETER_BAD_REQUEST, common.Message[common.PARAMETER_BAD_REQUEST]))
 		c.Abort()
 		return
 	}

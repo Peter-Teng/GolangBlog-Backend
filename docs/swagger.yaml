@@ -23,6 +23,18 @@ definitions:
         example: "123456"
         type: string
     type: object
+  model.Label:
+    properties:
+      description:
+        example: 如何使用Gin框架搭建一个web服务器
+        type: string
+      id:
+        example: 1
+        type: integer
+      labeName:
+        example: Gin框架
+        type: string
+    type: object
   model.LoginVo:
     properties:
       nickname:
@@ -102,6 +114,145 @@ paths:
       summary: author登录
       tags:
       - 登录接口
+  /v1/label/create:
+    post:
+      consumes:
+      - application/json
+      description: 输入信息来创建一个标签
+      parameters:
+      - description: 新建的标签信息
+        in: body
+        name: label
+        required: true
+        schema:
+          $ref: '#/definitions/model.Label'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: 新增标签成功
+          schema:
+            $ref: '#/definitions/entity.ResponseObject'
+        "403":
+          description: 标签重复
+          schema:
+            $ref: '#/definitions/entity.ResponseObject'
+        "500":
+          description: 服务器错误
+          schema:
+            $ref: '#/definitions/entity.ResponseObject'
+      security:
+      - ApiKeyAuth: []
+      summary: 新增Label标签
+      tags:
+      - Label接口
+  /v1/label/delete/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: 输入label_id以删除标签
+      parameters:
+      - description: 删除的label的id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: 删除成功
+        "400":
+          description: 输入参数有误
+          schema:
+            $ref: '#/definitions/entity.ResponseObject'
+        "402":
+          description: 用户未授权
+          schema:
+            $ref: '#/definitions/entity.ResponseObject'
+        "500":
+          description: 服务器错误
+          schema:
+            $ref: '#/definitions/entity.ResponseObject'
+      security:
+      - ApiKeyAuth: []
+      summary: 删除某个label
+      tags:
+      - Label接口
+  /v1/label/list:
+    get:
+      consumes:
+      - application/json
+      description: 获取全部label
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 查询成功
+          schema:
+            items:
+              $ref: '#/definitions/model.Label'
+            type: array
+        "400":
+          description: 输入参数有误
+          schema:
+            $ref: '#/definitions/entity.ResponseObject'
+        "402":
+          description: 用户未授权
+          schema:
+            $ref: '#/definitions/entity.ResponseObject'
+        "404":
+          description: 未找到资源
+          schema:
+            $ref: '#/definitions/entity.ResponseObject'
+      summary: 获取全部label
+      tags:
+      - Label接口
+  /v1/label/modify/{id}:
+    put:
+      consumes:
+      - application/json
+      description: 输入修改的label信息以更新信息
+      parameters:
+      - description: 修改的label id参数
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: 修改的标签信息
+        in: body
+        name: label
+        required: true
+        schema:
+          $ref: '#/definitions/model.Label'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 修改成功
+          schema:
+            $ref: '#/definitions/entity.ResponseObject'
+        "402":
+          description: 用户未授权
+          schema:
+            $ref: '#/definitions/entity.ResponseObject'
+        "403":
+          description: Label重复
+          schema:
+            $ref: '#/definitions/entity.ResponseObject'
+        "404":
+          description: 未找到资源
+          schema:
+            $ref: '#/definitions/entity.ResponseObject'
+        "500":
+          description: 服务器错误
+          schema:
+            $ref: '#/definitions/entity.ResponseObject'
+      security:
+      - ApiKeyAuth: []
+      summary: 修改label
+      tags:
+      - Label接口
   /v1/visitor/create:
     post:
       consumes:

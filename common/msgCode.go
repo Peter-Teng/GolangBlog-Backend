@@ -13,6 +13,10 @@ const (
 	USER_NOT_FOUND         = 1004
 	EMPTY_VISITOR_INFO     = 1005
 
+	//label相关状态码
+	EMPTY_LABEL_INFO = 3001
+	LABEL_USED       = 3002
+
 	//TOKEN 相关状态码
 	TOKEN_WRONG_TYPE  = 9999
 	TOKEN_WRONG_TOKEN = 9998
@@ -30,6 +34,9 @@ var Message = map[int]string{
 	VISITOR_DISABLED:       "用户已被禁用",
 	USER_NOT_FOUND:         "未能找到该用户",
 	EMPTY_VISITOR_INFO:     "用户名或密码为空",
+
+	EMPTY_LABEL_INFO: "标签为空",
+	LABEL_USED:       "标签名重复了",
 
 	TOKEN_WRONG_TYPE:  "TOKEN格式错误（请不要伪造token）",
 	TOKEN_WRONG_TOKEN: "TOKEN错误（请不要伪造token）",

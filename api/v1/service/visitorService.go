@@ -80,7 +80,7 @@ func ModifyVisitor(id int64, data *Visitor) (int, int) {
 	}
 	err := c.Db.Model(&data).Where("id = ?", id).Updates(m).Error
 	if err != nil {
-		c.Log.Errorf(common.SYSTEM_ERROR_LOG, "Fail to get visitors (database)", err)
+		c.Log.Errorf(common.SYSTEM_ERROR_LOG, "Fail to modify visitor (database)", err)
 		return http.StatusInternalServerError, common.FAIL
 	}
 	return http.StatusOK, common.SUCCESS

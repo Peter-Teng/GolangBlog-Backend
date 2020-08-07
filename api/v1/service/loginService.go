@@ -8,6 +8,7 @@ import (
 	"net/http"
 )
 
+//访客登录逻辑
 func VisitorLogin(nickname string, password string) (status int, code int, token string) {
 	var data model.Visitor
 	var err error
@@ -26,6 +27,7 @@ func VisitorLogin(nickname string, password string) (status int, code int, token
 	if pwd != data.Password {
 		return http.StatusForbidden, common.NAME_OR_PASSWORD_ERROR, ""
 	}
+	UpdateLastLoginTime(data.Id)
 	//传入身份为visitor
 	token, err = utils.GenerateToken(data.Nickname, "visitor", data.Id)
 	if err != nil {
@@ -35,6 +37,7 @@ func VisitorLogin(nickname string, password string) (status int, code int, token
 	return http.StatusOK, common.SUCCESS, token
 }
 
+//作者登录逻辑
 func AuthorLogin(nickname string, password string) (status int, code int, token string) {
 	var data model.Author
 	var err error
@@ -68,4 +71,11 @@ func AuthorLogin(nickname string, password string) (status int, code int, token 
 		}
 	}
 	return http.StatusOK, common.SUCCESS, token
+}
+
+//更新登录时间
+func UpdateLastLoginTime(id int64) {
+	var m = make(map[string]interface{})
+	m["last_login_time"] = nil
+	config.Db.Model(&model.Visitor{}).Where("id = ?", id).Update(m)
 }

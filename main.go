@@ -52,6 +52,7 @@ func main() {
 	//加载各类router
 	r.LoadVisitorRouters(engine)
 	r.LoadAuthorRouters(engine)
+	r.LoadLabelRouters(engine)
 
 	//启动swagger
 	config.InitSwaggerRouter(engine)
