@@ -2,6 +2,7 @@ package config
 
 import (
 	"MarvelousBlog-Backend/common"
+	jsoniter "github.com/json-iterator/go"
 	"github.com/sirupsen/logrus"
 	"gopkg.in/ini.v1"
 )
@@ -31,6 +32,7 @@ var (
 	SaltPrefix  string
 	SaltPostfix string
 	JwtSecurity string
+	Json        jsoniter.API
 )
 
 //从ini文件中读取所有输入变量
@@ -39,6 +41,8 @@ func init() {
 	if err != nil {
 		logrus.Errorf(common.SYSTEM_ERROR_LOG, "配置文件读入异常, errMsg = ", err)
 	}
+
+	Json = jsoniter.ConfigCompatibleWithStandardLibrary
 
 	loadServer(file)
 	loadRedis(file)
