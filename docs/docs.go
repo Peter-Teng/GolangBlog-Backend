@@ -28,6 +28,407 @@ var doc = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/v1/article/create": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "创建一篇新的文章",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Article接口"
+                ],
+                "summary": "新增文章",
+                "parameters": [
+                    {
+                        "description": "文章内容",
+                        "name": "label",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.Article"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "新增文章成功",
+                        "schema": {
+                            "$ref": "#/definitions/entity.ResponseObject"
+                        }
+                    },
+                    "500": {
+                        "description": "服务器错误",
+                        "schema": {
+                            "$ref": "#/definitions/entity.ResponseObject"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/article/delete/{id}": {
+            "delete": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "输入文章id以删除文章（软删除，并未在数据库中实际删除）",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Article接口"
+                ],
+                "summary": "删除某篇文章",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "删除的article的id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "删除成功"
+                    },
+                    "400": {
+                        "description": "输入参数有误",
+                        "schema": {
+                            "$ref": "#/definitions/entity.ResponseObject"
+                        }
+                    },
+                    "402": {
+                        "description": "用户未授权",
+                        "schema": {
+                            "$ref": "#/definitions/entity.ResponseObject"
+                        }
+                    },
+                    "500": {
+                        "description": "服务器错误",
+                        "schema": {
+                            "$ref": "#/definitions/entity.ResponseObject"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/article/detail/{id}": {
+            "get": {
+                "description": "获取某篇文章的内容",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Article接口"
+                ],
+                "summary": "获取某篇文章",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "所请求的文章id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "查询成功",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/model.Article"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "输入参数有误",
+                        "schema": {
+                            "$ref": "#/definitions/entity.ResponseObject"
+                        }
+                    },
+                    "404": {
+                        "description": "未找到资源",
+                        "schema": {
+                            "$ref": "#/definitions/entity.ResponseObject"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/article/enable/{id}": {
+            "patch": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "管理员重新启用某篇文章（status 0 -\u003e 1）",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Article接口"
+                ],
+                "summary": "管理员Enable文章",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "enable的文章id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Enable成功",
+                        "schema": {
+                            "$ref": "#/definitions/entity.ResponseObject"
+                        }
+                    },
+                    "400": {
+                        "description": "输入参数有误",
+                        "schema": {
+                            "$ref": "#/definitions/entity.ResponseObject"
+                        }
+                    },
+                    "404": {
+                        "description": "未找到资源",
+                        "schema": {
+                            "$ref": "#/definitions/entity.ResponseObject"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/article/list": {
+            "get": {
+                "description": "获取某篇文章的内容",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Article接口"
+                ],
+                "summary": "分页获取全部文章(每页10篇）",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "请求的页码数",
+                        "name": "pageNum",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "查询成功",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/model.Article"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "输入参数有误",
+                        "schema": {
+                            "$ref": "#/definitions/entity.ResponseObject"
+                        }
+                    },
+                    "404": {
+                        "description": "未找到资源",
+                        "schema": {
+                            "$ref": "#/definitions/entity.ResponseObject"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/article/modify/{id}": {
+            "put": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "输入新的文章内容以更新文章",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Article接口"
+                ],
+                "summary": "修改文章内容",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "修改的文章的id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "修改的文章信息",
+                        "name": "visitor",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.Article"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "修改成功",
+                        "schema": {
+                            "$ref": "#/definitions/entity.ResponseObject"
+                        }
+                    },
+                    "402": {
+                        "description": "用户未授权",
+                        "schema": {
+                            "$ref": "#/definitions/entity.ResponseObject"
+                        }
+                    },
+                    "404": {
+                        "description": "未找到资源",
+                        "schema": {
+                            "$ref": "#/definitions/entity.ResponseObject"
+                        }
+                    },
+                    "500": {
+                        "description": "服务器错误",
+                        "schema": {
+                            "$ref": "#/definitions/entity.ResponseObject"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/article/onLabel/{labelId}": {
+            "get": {
+                "description": "获取某一标签下的全部文章",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Article接口"
+                ],
+                "summary": "获取某一标签下的全部文章",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "请求的标签的id",
+                        "name": "labelId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "查询成功",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/model.Article"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "输入参数有误",
+                        "schema": {
+                            "$ref": "#/definitions/entity.ResponseObject"
+                        }
+                    },
+                    "404": {
+                        "description": "未找到资源",
+                        "schema": {
+                            "$ref": "#/definitions/entity.ResponseObject"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/article/superAuthor/list": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "管理员获取全部文章（包括status = 0的）",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Article接口"
+                ],
+                "summary": "管理员获取全部文章",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "请求的页码数",
+                        "name": "pageNum",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "查询成功",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/model.Article"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "输入参数有误",
+                        "schema": {
+                            "$ref": "#/definitions/entity.ResponseObject"
+                        }
+                    },
+                    "404": {
+                        "description": "未找到资源",
+                        "schema": {
+                            "$ref": "#/definitions/entity.ResponseObject"
+                        }
+                    }
+                }
+            }
+        },
         "/v1/author/login": {
             "post": {
                 "description": "输入用户名密码以登录",
@@ -296,399 +697,6 @@ var doc = `{
                     }
                 }
             }
-        },
-        "/v1/visitor/create": {
-            "post": {
-                "description": "输入信息来创建一个visitor",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Visitor接口"
-                ],
-                "summary": "新增visitor用户",
-                "parameters": [
-                    {
-                        "description": "注册访客信息",
-                        "name": "visitor",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/model.CreateVisitorVO"
-                        }
-                    }
-                ],
-                "responses": {
-                    "201": {
-                        "description": "注册成功",
-                        "schema": {
-                            "$ref": "#/definitions/entity.ResponseObject"
-                        }
-                    },
-                    "403": {
-                        "description": "用户名重复",
-                        "schema": {
-                            "$ref": "#/definitions/entity.ResponseObject"
-                        }
-                    },
-                    "500": {
-                        "description": "服务器错误",
-                        "schema": {
-                            "$ref": "#/definitions/entity.ResponseObject"
-                        }
-                    }
-                }
-            }
-        },
-        "/v1/visitor/delete/{id}": {
-            "delete": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "description": "输入Visitor_id以删除visitor",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Visitor接口"
-                ],
-                "summary": "删除某个visitor",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "删除的visitor id参数",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "204": {
-                        "description": "删除成功"
-                    },
-                    "400": {
-                        "description": "输入参数有误",
-                        "schema": {
-                            "$ref": "#/definitions/entity.ResponseObject"
-                        }
-                    },
-                    "402": {
-                        "description": "用户未授权",
-                        "schema": {
-                            "$ref": "#/definitions/entity.ResponseObject"
-                        }
-                    },
-                    "500": {
-                        "description": "服务器错误",
-                        "schema": {
-                            "$ref": "#/definitions/entity.ResponseObject"
-                        }
-                    }
-                }
-            }
-        },
-        "/v1/visitor/detail/{id}": {
-            "get": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "description": "在URL中输入ID以获取Visitor信息",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Visitor接口"
-                ],
-                "summary": "获取单个visitor的信息（以id获取）",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "所请求的id参数",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "查询成功",
-                        "schema": {
-                            "$ref": "#/definitions/model.Visitor"
-                        }
-                    },
-                    "400": {
-                        "description": "输入参数有误",
-                        "schema": {
-                            "$ref": "#/definitions/entity.ResponseObject"
-                        }
-                    },
-                    "402": {
-                        "description": "用户未授权",
-                        "schema": {
-                            "$ref": "#/definitions/entity.ResponseObject"
-                        }
-                    },
-                    "404": {
-                        "description": "未找到资源",
-                        "schema": {
-                            "$ref": "#/definitions/entity.ResponseObject"
-                        }
-                    }
-                }
-            }
-        },
-        "/v1/visitor/flip/{id}": {
-            "patch": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "description": "Flip某个visitor的状态，1-\u003e0;0-\u003e1",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Visitor接口"
-                ],
-                "summary": "禁用(启用)某个visitor",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "禁用的visitor id参数",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "禁用成功",
-                        "schema": {
-                            "$ref": "#/definitions/entity.ResponseObject"
-                        }
-                    },
-                    "400": {
-                        "description": "输入参数有误",
-                        "schema": {
-                            "$ref": "#/definitions/entity.ResponseObject"
-                        }
-                    },
-                    "402": {
-                        "description": "用户未授权",
-                        "schema": {
-                            "$ref": "#/definitions/entity.ResponseObject"
-                        }
-                    },
-                    "500": {
-                        "description": "服务器错误",
-                        "schema": {
-                            "$ref": "#/definitions/entity.ResponseObject"
-                        }
-                    }
-                }
-            }
-        },
-        "/v1/visitor/list": {
-            "get": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "description": "在URL中输入pageNum, pageSize以拉取Visitor列表信息",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Visitor接口"
-                ],
-                "summary": "获取多个visitor的信息",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "请求的页表大小",
-                        "name": "pageSize",
-                        "in": "query"
-                    },
-                    {
-                        "type": "integer",
-                        "description": "请求的offset",
-                        "name": "pageNum",
-                        "in": "query"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "查询成功",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/model.Visitor"
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "输入参数有误",
-                        "schema": {
-                            "$ref": "#/definitions/entity.ResponseObject"
-                        }
-                    },
-                    "402": {
-                        "description": "用户未授权",
-                        "schema": {
-                            "$ref": "#/definitions/entity.ResponseObject"
-                        }
-                    },
-                    "404": {
-                        "description": "未找到资源",
-                        "schema": {
-                            "$ref": "#/definitions/entity.ResponseObject"
-                        }
-                    }
-                }
-            }
-        },
-        "/v1/visitor/login": {
-            "post": {
-                "description": "输入用户名密码以登录",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "登录接口"
-                ],
-                "summary": "visitor登录",
-                "parameters": [
-                    {
-                        "description": "访客登录信息",
-                        "name": "visitor",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/model.LoginVo"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "登录成功",
-                        "schema": {
-                            "$ref": "#/definitions/entity.ResponseObject"
-                        }
-                    },
-                    "403": {
-                        "description": "用户名或密码错误",
-                        "schema": {
-                            "$ref": "#/definitions/entity.ResponseObject"
-                        }
-                    },
-                    "404": {
-                        "description": "未找到该用户",
-                        "schema": {
-                            "$ref": "#/definitions/entity.ResponseObject"
-                        }
-                    },
-                    "500": {
-                        "description": "服务器错误",
-                        "schema": {
-                            "$ref": "#/definitions/entity.ResponseObject"
-                        }
-                    }
-                }
-            }
-        },
-        "/v1/visitor/modify/{id}": {
-            "put": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "description": "输入新的Visitor信息以更新信息",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Visitor接口"
-                ],
-                "summary": "修改visitor信息",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "修改的visitor id参数",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "description": "访客信息",
-                        "name": "visitor",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/model.CreateVisitorVO"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "修改成功",
-                        "schema": {
-                            "$ref": "#/definitions/entity.ResponseObject"
-                        }
-                    },
-                    "402": {
-                        "description": "用户未授权",
-                        "schema": {
-                            "$ref": "#/definitions/entity.ResponseObject"
-                        }
-                    },
-                    "403": {
-                        "description": "用户名重复",
-                        "schema": {
-                            "$ref": "#/definitions/entity.ResponseObject"
-                        }
-                    },
-                    "404": {
-                        "description": "未找到资源",
-                        "schema": {
-                            "$ref": "#/definitions/entity.ResponseObject"
-                        }
-                    },
-                    "500": {
-                        "description": "服务器错误",
-                        "schema": {
-                            "$ref": "#/definitions/entity.ResponseObject"
-                        }
-                    }
-                }
-            }
         }
     },
     "definitions": {
@@ -705,24 +713,38 @@ var doc = `{
                 }
             }
         },
-        "model.CreateVisitorVO": {
+        "model.Article": {
             "type": "object",
             "properties": {
-                "email": {
-                    "type": "string",
-                    "example": "xxxxx@xx.com"
+                "authorId": {
+                    "type": "integer"
                 },
-                "mobile": {
-                    "type": "string",
-                    "example": "13xxxxxxxxx"
+                "content": {
+                    "type": "string"
                 },
-                "nickname": {
-                    "type": "string",
-                    "example": "PP同学"
+                "id": {
+                    "type": "integer"
                 },
-                "password": {
-                    "type": "string",
-                    "example": "123456"
+                "labelId": {
+                    "type": "integer"
+                },
+                "lastModifyTime": {
+                    "type": "string"
+                },
+                "postTime": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "integer"
+                },
+                "summary": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "visitCount": {
+                    "type": "integer"
                 }
             }
         },
@@ -755,43 +777,6 @@ var doc = `{
                     "example": "123456"
                 }
             }
-        },
-        "model.Visitor": {
-            "type": "object",
-            "properties": {
-                "email": {
-                    "type": "string",
-                    "example": "xxxxx@xx.com"
-                },
-                "id": {
-                    "type": "integer",
-                    "example": 1
-                },
-                "lastLoginTime": {
-                    "type": "string",
-                    "example": "2020-08-02T21:20:41+08:00"
-                },
-                "mobile": {
-                    "type": "string",
-                    "example": "13xxxxxxxxx"
-                },
-                "nickname": {
-                    "type": "string",
-                    "example": "PP同学"
-                },
-                "password": {
-                    "type": "string",
-                    "example": "123456"
-                },
-                "registerTime": {
-                    "type": "string",
-                    "example": "2020-08-02T21:20:41+08:00"
-                },
-                "status": {
-                    "type": "integer",
-                    "example": 1
-                }
-            }
         }
     },
     "securityDefinitions": {
@@ -818,7 +803,7 @@ var SwaggerInfo = swaggerInfo{
 	Host:        "",
 	BasePath:    "",
 	Schemes:     []string{},
-	Title:       "PP同学个人博客接口文档",
+	Title:       "PP同学接口文档",
 	Description: "MarvelousBlog-Backend Swagger接口文档",
 }
 

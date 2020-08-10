@@ -6,12 +6,13 @@ const (
 	UNAUTHORIZED          = 401
 	FAIL                  = 500
 
-	//用户(visitor、author) 相关状态码
-	NICKNAME_USED          = 1001
-	NAME_OR_PASSWORD_ERROR = 1002
-	VISITOR_DISABLED       = 1003
-	USER_NOT_FOUND         = 1004
-	EMPTY_VISITOR_INFO     = 1005
+	//用户(author) 相关状态码
+	NAME_OR_PASSWORD_ERROR = 1001
+	USER_NOT_FOUND         = 1002
+	EMPTY_VISITOR_INFO     = 1003
+
+	//文章Article 相关状态码
+	ARTICLE_NOT_FOUND = 2001
 
 	//label相关状态码
 	EMPTY_LABEL_INFO = 3001
@@ -29,11 +30,11 @@ var Message = map[int]string{
 	UNAUTHORIZED:          "未授权操作，请登录或者确认自己的权限是否可以进行此操作",
 	FAIL:                  "服务端出现错误，详情请查看日志",
 
-	NICKNAME_USED:          "用户名已被使用",
 	NAME_OR_PASSWORD_ERROR: "用户名或密码错误",
-	VISITOR_DISABLED:       "用户已被禁用",
 	USER_NOT_FOUND:         "未能找到该用户",
 	EMPTY_VISITOR_INFO:     "用户名或密码为空",
+
+	ARTICLE_NOT_FOUND: "找不到该文章",
 
 	EMPTY_LABEL_INFO: "标签为空",
 	LABEL_USED:       "标签名重复了",

@@ -20,7 +20,7 @@ import (
 //系统是否需要重启
 var RESTART_NEEDED = false
 
-// @title PP同学个人博客接口文档
+// @title PP同学接口文档
 // @version 0.1
 // @description MarvelousBlog-Backend Swagger接口文档
 // @contact.name PP同学
@@ -50,7 +50,7 @@ func main() {
 	//engine.Use(middleware.CORS())
 
 	//加载各类router
-	r.LoadVisitorRouters(engine)
+	r.LoadArticleRouter(engine)
 	r.LoadAuthorRouters(engine)
 	r.LoadLabelRouters(engine)
 

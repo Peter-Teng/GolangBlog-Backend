@@ -8,20 +8,28 @@ definitions:
         example: Some message about the code.
         type: string
     type: object
-  model.CreateVisitorVO:
+  model.Article:
     properties:
-      email:
-        example: xxxxx@xx.com
+      authorId:
+        type: integer
+      content:
         type: string
-      mobile:
-        example: 13xxxxxxxxx
+      id:
+        type: integer
+      labelId:
+        type: integer
+      lastModifyTime:
         type: string
-      nickname:
-        example: PP同学
+      postTime:
         type: string
-      password:
-        example: "123456"
+      status:
+        type: integer
+      summary:
         type: string
+      title:
+        type: string
+      visitCount:
+        type: integer
     type: object
   model.Label:
     properties:
@@ -44,42 +52,272 @@ definitions:
         example: "123456"
         type: string
     type: object
-  model.Visitor:
-    properties:
-      email:
-        example: xxxxx@xx.com
-        type: string
-      id:
-        example: 1
-        type: integer
-      lastLoginTime:
-        example: "2020-08-02T21:20:41+08:00"
-        type: string
-      mobile:
-        example: 13xxxxxxxxx
-        type: string
-      nickname:
-        example: PP同学
-        type: string
-      password:
-        example: "123456"
-        type: string
-      registerTime:
-        example: "2020-08-02T21:20:41+08:00"
-        type: string
-      status:
-        example: 1
-        type: integer
-    type: object
 info:
   contact:
     email: 710955321@qq.com
     name: PP同学
   description: MarvelousBlog-Backend Swagger接口文档
   license: {}
-  title: PP同学个人博客接口文档
+  title: PP同学接口文档
   version: "0.1"
 paths:
+  /v1/article/create:
+    post:
+      consumes:
+      - application/json
+      description: 创建一篇新的文章
+      parameters:
+      - description: 文章内容
+        in: body
+        name: label
+        required: true
+        schema:
+          $ref: '#/definitions/model.Article'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: 新增文章成功
+          schema:
+            $ref: '#/definitions/entity.ResponseObject'
+        "500":
+          description: 服务器错误
+          schema:
+            $ref: '#/definitions/entity.ResponseObject'
+      security:
+      - ApiKeyAuth: []
+      summary: 新增文章
+      tags:
+      - Article接口
+  /v1/article/delete/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: 输入文章id以删除文章（软删除，并未在数据库中实际删除）
+      parameters:
+      - description: 删除的article的id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: 删除成功
+        "400":
+          description: 输入参数有误
+          schema:
+            $ref: '#/definitions/entity.ResponseObject'
+        "402":
+          description: 用户未授权
+          schema:
+            $ref: '#/definitions/entity.ResponseObject'
+        "500":
+          description: 服务器错误
+          schema:
+            $ref: '#/definitions/entity.ResponseObject'
+      security:
+      - ApiKeyAuth: []
+      summary: 删除某篇文章
+      tags:
+      - Article接口
+  /v1/article/detail/{id}:
+    get:
+      consumes:
+      - application/json
+      description: 获取某篇文章的内容
+      parameters:
+      - description: 所请求的文章id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 查询成功
+          schema:
+            items:
+              $ref: '#/definitions/model.Article'
+            type: array
+        "400":
+          description: 输入参数有误
+          schema:
+            $ref: '#/definitions/entity.ResponseObject'
+        "404":
+          description: 未找到资源
+          schema:
+            $ref: '#/definitions/entity.ResponseObject'
+      summary: 获取某篇文章
+      tags:
+      - Article接口
+  /v1/article/enable/{id}:
+    patch:
+      consumes:
+      - application/json
+      description: 管理员重新启用某篇文章（status 0 -> 1）
+      parameters:
+      - description: enable的文章id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Enable成功
+          schema:
+            $ref: '#/definitions/entity.ResponseObject'
+        "400":
+          description: 输入参数有误
+          schema:
+            $ref: '#/definitions/entity.ResponseObject'
+        "404":
+          description: 未找到资源
+          schema:
+            $ref: '#/definitions/entity.ResponseObject'
+      security:
+      - ApiKeyAuth: []
+      summary: 管理员Enable文章
+      tags:
+      - Article接口
+  /v1/article/list:
+    get:
+      consumes:
+      - application/json
+      description: 获取某篇文章的内容
+      parameters:
+      - description: 请求的页码数
+        in: query
+        name: pageNum
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 查询成功
+          schema:
+            items:
+              $ref: '#/definitions/model.Article'
+            type: array
+        "400":
+          description: 输入参数有误
+          schema:
+            $ref: '#/definitions/entity.ResponseObject'
+        "404":
+          description: 未找到资源
+          schema:
+            $ref: '#/definitions/entity.ResponseObject'
+      summary: 分页获取全部文章(每页10篇）
+      tags:
+      - Article接口
+  /v1/article/modify/{id}:
+    put:
+      consumes:
+      - application/json
+      description: 输入新的文章内容以更新文章
+      parameters:
+      - description: 修改的文章的id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: 修改的文章信息
+        in: body
+        name: visitor
+        required: true
+        schema:
+          $ref: '#/definitions/model.Article'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 修改成功
+          schema:
+            $ref: '#/definitions/entity.ResponseObject'
+        "402":
+          description: 用户未授权
+          schema:
+            $ref: '#/definitions/entity.ResponseObject'
+        "404":
+          description: 未找到资源
+          schema:
+            $ref: '#/definitions/entity.ResponseObject'
+        "500":
+          description: 服务器错误
+          schema:
+            $ref: '#/definitions/entity.ResponseObject'
+      security:
+      - ApiKeyAuth: []
+      summary: 修改文章内容
+      tags:
+      - Article接口
+  /v1/article/onLabel/{labelId}:
+    get:
+      consumes:
+      - application/json
+      description: 获取某一标签下的全部文章
+      parameters:
+      - description: 请求的标签的id
+        in: path
+        name: labelId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 查询成功
+          schema:
+            items:
+              $ref: '#/definitions/model.Article'
+            type: array
+        "400":
+          description: 输入参数有误
+          schema:
+            $ref: '#/definitions/entity.ResponseObject'
+        "404":
+          description: 未找到资源
+          schema:
+            $ref: '#/definitions/entity.ResponseObject'
+      summary: 获取某一标签下的全部文章
+      tags:
+      - Article接口
+  /v1/article/superAuthor/list:
+    get:
+      consumes:
+      - application/json
+      description: 管理员获取全部文章（包括status = 0的）
+      parameters:
+      - description: 请求的页码数
+        in: query
+        name: pageNum
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 查询成功
+          schema:
+            items:
+              $ref: '#/definitions/model.Article'
+            type: array
+        "400":
+          description: 输入参数有误
+          schema:
+            $ref: '#/definitions/entity.ResponseObject'
+        "404":
+          description: 未找到资源
+          schema:
+            $ref: '#/definitions/entity.ResponseObject'
+      security:
+      - ApiKeyAuth: []
+      summary: 管理员获取全部文章
+      tags:
+      - Article接口
   /v1/author/login:
     post:
       consumes:
@@ -253,258 +491,6 @@ paths:
       summary: 修改label
       tags:
       - Label接口
-  /v1/visitor/create:
-    post:
-      consumes:
-      - application/json
-      description: 输入信息来创建一个visitor
-      parameters:
-      - description: 注册访客信息
-        in: body
-        name: visitor
-        required: true
-        schema:
-          $ref: '#/definitions/model.CreateVisitorVO'
-      produces:
-      - application/json
-      responses:
-        "201":
-          description: 注册成功
-          schema:
-            $ref: '#/definitions/entity.ResponseObject'
-        "403":
-          description: 用户名重复
-          schema:
-            $ref: '#/definitions/entity.ResponseObject'
-        "500":
-          description: 服务器错误
-          schema:
-            $ref: '#/definitions/entity.ResponseObject'
-      summary: 新增visitor用户
-      tags:
-      - Visitor接口
-  /v1/visitor/delete/{id}:
-    delete:
-      consumes:
-      - application/json
-      description: 输入Visitor_id以删除visitor
-      parameters:
-      - description: 删除的visitor id参数
-        in: path
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "204":
-          description: 删除成功
-        "400":
-          description: 输入参数有误
-          schema:
-            $ref: '#/definitions/entity.ResponseObject'
-        "402":
-          description: 用户未授权
-          schema:
-            $ref: '#/definitions/entity.ResponseObject'
-        "500":
-          description: 服务器错误
-          schema:
-            $ref: '#/definitions/entity.ResponseObject'
-      security:
-      - ApiKeyAuth: []
-      summary: 删除某个visitor
-      tags:
-      - Visitor接口
-  /v1/visitor/detail/{id}:
-    get:
-      consumes:
-      - application/json
-      description: 在URL中输入ID以获取Visitor信息
-      parameters:
-      - description: 所请求的id参数
-        in: path
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: 查询成功
-          schema:
-            $ref: '#/definitions/model.Visitor'
-        "400":
-          description: 输入参数有误
-          schema:
-            $ref: '#/definitions/entity.ResponseObject'
-        "402":
-          description: 用户未授权
-          schema:
-            $ref: '#/definitions/entity.ResponseObject'
-        "404":
-          description: 未找到资源
-          schema:
-            $ref: '#/definitions/entity.ResponseObject'
-      security:
-      - ApiKeyAuth: []
-      summary: 获取单个visitor的信息（以id获取）
-      tags:
-      - Visitor接口
-  /v1/visitor/flip/{id}:
-    patch:
-      consumes:
-      - application/json
-      description: Flip某个visitor的状态，1->0;0->1
-      parameters:
-      - description: 禁用的visitor id参数
-        in: path
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: 禁用成功
-          schema:
-            $ref: '#/definitions/entity.ResponseObject'
-        "400":
-          description: 输入参数有误
-          schema:
-            $ref: '#/definitions/entity.ResponseObject'
-        "402":
-          description: 用户未授权
-          schema:
-            $ref: '#/definitions/entity.ResponseObject'
-        "500":
-          description: 服务器错误
-          schema:
-            $ref: '#/definitions/entity.ResponseObject'
-      security:
-      - ApiKeyAuth: []
-      summary: 禁用(启用)某个visitor
-      tags:
-      - Visitor接口
-  /v1/visitor/list:
-    get:
-      consumes:
-      - application/json
-      description: 在URL中输入pageNum, pageSize以拉取Visitor列表信息
-      parameters:
-      - description: 请求的页表大小
-        in: query
-        name: pageSize
-        type: integer
-      - description: 请求的offset
-        in: query
-        name: pageNum
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: 查询成功
-          schema:
-            items:
-              $ref: '#/definitions/model.Visitor'
-            type: array
-        "400":
-          description: 输入参数有误
-          schema:
-            $ref: '#/definitions/entity.ResponseObject'
-        "402":
-          description: 用户未授权
-          schema:
-            $ref: '#/definitions/entity.ResponseObject'
-        "404":
-          description: 未找到资源
-          schema:
-            $ref: '#/definitions/entity.ResponseObject'
-      security:
-      - ApiKeyAuth: []
-      summary: 获取多个visitor的信息
-      tags:
-      - Visitor接口
-  /v1/visitor/login:
-    post:
-      consumes:
-      - application/json
-      description: 输入用户名密码以登录
-      parameters:
-      - description: 访客登录信息
-        in: body
-        name: visitor
-        required: true
-        schema:
-          $ref: '#/definitions/model.LoginVo'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: 登录成功
-          schema:
-            $ref: '#/definitions/entity.ResponseObject'
-        "403":
-          description: 用户名或密码错误
-          schema:
-            $ref: '#/definitions/entity.ResponseObject'
-        "404":
-          description: 未找到该用户
-          schema:
-            $ref: '#/definitions/entity.ResponseObject'
-        "500":
-          description: 服务器错误
-          schema:
-            $ref: '#/definitions/entity.ResponseObject'
-      summary: visitor登录
-      tags:
-      - 登录接口
-  /v1/visitor/modify/{id}:
-    put:
-      consumes:
-      - application/json
-      description: 输入新的Visitor信息以更新信息
-      parameters:
-      - description: 修改的visitor id参数
-        in: path
-        name: id
-        required: true
-        type: integer
-      - description: 访客信息
-        in: body
-        name: visitor
-        required: true
-        schema:
-          $ref: '#/definitions/model.CreateVisitorVO'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: 修改成功
-          schema:
-            $ref: '#/definitions/entity.ResponseObject'
-        "402":
-          description: 用户未授权
-          schema:
-            $ref: '#/definitions/entity.ResponseObject'
-        "403":
-          description: 用户名重复
-          schema:
-            $ref: '#/definitions/entity.ResponseObject'
-        "404":
-          description: 未找到资源
-          schema:
-            $ref: '#/definitions/entity.ResponseObject'
-        "500":
-          description: 服务器错误
-          schema:
-            $ref: '#/definitions/entity.ResponseObject'
-      security:
-      - ApiKeyAuth: []
-      summary: 修改visitor信息
-      tags:
-      - Visitor接口
 securityDefinitions:
   ApiKeyAuth:
     in: header

@@ -8,7 +8,8 @@ import (
 func LoadAuthorRouters(r *gin.Engine) {
 	router := r.Group("/v1/author")
 	{
-		//visitor登录接口
+		//author登录接口
 		router.POST("/login", handler.AuthorLogin)
+
 	}
 }

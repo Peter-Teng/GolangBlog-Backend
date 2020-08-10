@@ -20,6 +20,5 @@ func LoadLabelRouters(r *gin.Engine) {
 
 		//删除某个label
 		router.DELETE("/delete/:id", middleware.Auth(), handler.DeleteLabel)
-
 	}
 }

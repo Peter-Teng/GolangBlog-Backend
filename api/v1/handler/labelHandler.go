@@ -24,9 +24,8 @@ import (
 // @Failure 500 object entity.ResponseObject "服务器错误"
 // @Router /v1/label/create [POST]
 func CreateLabel(c *gin.Context) {
-	claims, _ := c.Get("claims")
-	info := claims.(*utils.BlogClaims)
-	if info.Role != "superAuthor" {
+	claims, exists := c.Get("claims")
+	if !exists || claims.(*utils.BlogClaims).Role != "superAuthor" {
 		c.JSON(http.StatusUnauthorized, entity.NewResponseObject(common.UNAUTHORIZED, common.Message[common.UNAUTHORIZED]))
 		c.Abort()
 		return
@@ -83,9 +82,8 @@ func ModifyLabel(c *gin.Context) {
 		c.Abort()
 		return
 	}
-	claims, _ := c.Get("claims")
-	info := claims.(*utils.BlogClaims)
-	if info.Role != "superAuthor" {
+	claims, exists := c.Get("claims")
+	if !exists || claims.(*utils.BlogClaims).Role != "superAuthor" {
 		c.JSON(http.StatusUnauthorized, entity.NewResponseObject(common.UNAUTHORIZED, common.Message[common.UNAUTHORIZED]))
 		c.Abort()
 		return
@@ -113,9 +111,8 @@ func ModifyLabel(c *gin.Context) {
 // @Failure 500 object entity.ResponseObject "服务器错误"
 // @Router /v1/label/delete/{id}  [DELETE]
 func DeleteLabel(c *gin.Context) {
-	claims, _ := c.Get("claims")
-	info := claims.(*utils.BlogClaims)
-	if info.Role != "superAuthor" {
+	claims, exists := c.Get("claims")
+	if !exists || claims.(*utils.BlogClaims).Role != "superAuthor" {
 		c.JSON(http.StatusUnauthorized, entity.NewResponseObject(common.UNAUTHORIZED, common.Message[common.UNAUTHORIZED]))
 		c.Abort()
 		return
