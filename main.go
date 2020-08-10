@@ -53,6 +53,7 @@ func main() {
 	r.LoadArticleRouter(engine)
 	r.LoadAuthorRouters(engine)
 	r.LoadLabelRouters(engine)
+	r.LoadCommentRouter(engine)
 
 	//启动swagger
 	config.InitSwaggerRouter(engine)

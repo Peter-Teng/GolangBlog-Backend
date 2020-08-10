@@ -481,6 +481,111 @@ var doc = `{
                 }
             }
         },
+        "/v1/comment/delete/{id}": {
+            "delete": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "输入评论id以删除某条评论",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Comment接口"
+                ],
+                "summary": "删除某条评论",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "删除的评论的id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "删除成功"
+                    },
+                    "400": {
+                        "description": "输入参数有误",
+                        "schema": {
+                            "$ref": "#/definitions/entity.ResponseObject"
+                        }
+                    },
+                    "402": {
+                        "description": "用户未授权",
+                        "schema": {
+                            "$ref": "#/definitions/entity.ResponseObject"
+                        }
+                    },
+                    "500": {
+                        "description": "服务器错误",
+                        "schema": {
+                            "$ref": "#/definitions/entity.ResponseObject"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/comment/list/{articleId}": {
+            "get": {
+                "description": "获取某篇文章文章的20个评论",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Comment接口"
+                ],
+                "summary": "分页获取某篇文章下的评论",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "请求的页码数",
+                        "name": "pageNum",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "评论的article的id",
+                        "name": "articleId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "查询成功",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/model.Comment"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "输入参数有误",
+                        "schema": {
+                            "$ref": "#/definitions/entity.ResponseObject"
+                        }
+                    },
+                    "404": {
+                        "description": "未找到资源",
+                        "schema": {
+                            "$ref": "#/definitions/entity.ResponseObject"
+                        }
+                    }
+                }
+            }
+        },
         "/v1/label/create": {
             "post": {
                 "security": [
@@ -745,6 +850,27 @@ var doc = `{
                 },
                 "visitCount": {
                     "type": "integer"
+                }
+            }
+        },
+        "model.Comment": {
+            "type": "object",
+            "properties": {
+                "articleId": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "content": {
+                    "type": "string",
+                    "example": "写得不错！"
+                },
+                "email": {
+                    "type": "string",
+                    "example": "1846156416@qq.com"
+                },
+                "mobile": {
+                    "type": "string",
+                    "example": "137xxxxxxxx"
                 }
             }
         },
