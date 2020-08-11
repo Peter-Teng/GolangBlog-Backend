@@ -6,6 +6,7 @@ import (
 	. "MarvelousBlog-Backend/config"
 	"MarvelousBlog-Backend/entity"
 	"MarvelousBlog-Backend/entity/model"
+	"MarvelousBlog-Backend/utils"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
@@ -25,11 +26,12 @@ func AuthorLogin(c *gin.Context) {
 	var data model.Author
 	if err := c.ShouldBind(&data); err != nil {
 		Log.Errorf(common.SYSTEM_ERROR_LOG, "Json bind error!", err)
+		c.JSON(http.StatusBadRequest, entity.NewResponseObject(common.PARAMETER_BAD_REQUEST, common.Message[common.PARAMETER_BAD_REQUEST]))
 		c.Abort()
 		return
 	}
-	if data.Nickname == "" || data.Password == "" {
-		c.JSON(http.StatusForbidden, entity.NewResponseObject(common.EMPTY_VISITOR_INFO, common.Message[common.EMPTY_VISITOR_INFO]))
+	if msg, ok := utils.Validate(&data); !ok {
+		c.JSON(http.StatusBadRequest, entity.NewResponseObject(common.PARAMETER_BAD_REQUEST, msg))
 		c.Abort()
 		return
 	}

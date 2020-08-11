@@ -10,7 +10,7 @@ func LoadCommentRouter(r *gin.Engine) {
 	router := r.Group("/v1/comment")
 	{
 		//新增评论
-		router.POST("/create/:articleId", handler.MakeComment)
+		router.POST("/create", handler.MakeComment)
 
 		//获取某篇文章的全部评论
 		router.GET("/list/:articleId", handler.ListComment)

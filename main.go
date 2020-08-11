@@ -47,7 +47,7 @@ func main() {
 	engine.Use(gin.Recovery())
 
 	//添加跨域中间件
-	//engine.Use(middleware.CORS())
+	engine.Use(middleware.CORS())
 
 	//加载各类router
 	r.LoadArticleRouter(engine)

@@ -20,11 +20,17 @@ import (
 // @Param label body model.Comment true "评论内容"
 // @Success 201 object entity.ResponseObject "评论成功"
 // @Failure 500 object entity.ResponseObject "服务器错误"
-// @Router /v1/article/create [POST]
+// @Router /v1/comment/create [POST]
 func MakeComment(c *gin.Context) {
 	var data model.Comment
 	if err := c.ShouldBind(&data); err != nil {
 		config.Log.Errorf(common.SYSTEM_ERROR_LOG, "Json bind error!", err)
+		c.JSON(http.StatusBadRequest, entity.NewResponseObject(common.PARAMETER_BAD_REQUEST, common.Message[common.PARAMETER_BAD_REQUEST]))
+		c.Abort()
+		return
+	}
+	if msg, ok := utils.Validate(&data); !ok {
+		c.JSON(http.StatusBadRequest, entity.NewResponseObject(common.PARAMETER_BAD_REQUEST, msg))
 		c.Abort()
 		return
 	}

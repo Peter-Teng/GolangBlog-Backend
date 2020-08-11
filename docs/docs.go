@@ -481,6 +481,46 @@ var doc = `{
                 }
             }
         },
+        "/v1/comment/create": {
+            "post": {
+                "description": "为某篇文章添加评论",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Comment接口"
+                ],
+                "summary": "新增评论",
+                "parameters": [
+                    {
+                        "description": "评论内容",
+                        "name": "label",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.Comment"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "评论成功",
+                        "schema": {
+                            "$ref": "#/definitions/entity.ResponseObject"
+                        }
+                    },
+                    "500": {
+                        "description": "服务器错误",
+                        "schema": {
+                            "$ref": "#/definitions/entity.ResponseObject"
+                        }
+                    }
+                }
+            }
+        },
         "/v1/comment/delete/{id}": {
             "delete": {
                 "security": [
@@ -855,6 +895,9 @@ var doc = `{
         },
         "model.Comment": {
             "type": "object",
+            "required": [
+                "content"
+            ],
             "properties": {
                 "articleId": {
                     "type": "integer",
