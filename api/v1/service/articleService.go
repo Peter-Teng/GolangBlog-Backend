@@ -27,7 +27,7 @@ func GetArticle(id int64) (int, int, Article) {
 	var data Article
 	article, err := utils.RedisGet(fmt.Sprintf(QUERY_ARTICLE_BY_ID_KEY, id))
 	if err == nil {
-		err = c.Json.Unmarshal(utils.Str2bytes(article), &data)
+		err = c.Json.Unmarshal(utils.Str2bytes(article), data)
 		if err == nil {
 			return http.StatusOK, common.SUCCESS, data
 		}
@@ -40,27 +40,21 @@ func GetArticle(id int64) (int, int, Article) {
 	return http.StatusOK, common.SUCCESS, data
 }
 
-func GetArticles(pageNum int) (int, int, []ArticleVO) {
-	var data []ArticleVO
-	//if articles, err := utils.RedisGet(fmt.Sprintf(QUERY_ARTICLES_BY_PAGE_KEY, pageNum - 1)); err == nil{
-	//	err = c.Json.Unmarshal(utils.Str2bytes(articles), &data)
-	//	if err == nil {
-	//		return http.StatusOK, common.SUCCESS, data
-	//	}
-	//}
-	if err := c.Db.
+func GetArticles(pageNum int) (int, int, MainData) {
+	var data MainData
+	if err := c.Db.Model(&Article{}).Count(&data.TotalArticles).
 		Raw("SELECT article.id, title, abstract, post_time, author_id, visit_count, last_modify_time, label_name, description "+
 			"FROM article INNER JOIN label on article.label_id = label.id "+
 			"WHERE article.status > 0 "+
-			"ORDER BY post_time DESC LIMIT ?, 5", (pageNum-1)*5).
-		Scan(&data).Error; err != nil {
+			"ORDER BY post_time DESC LIMIT ?, 10", (pageNum-1)*10).
+		Scan(&data.Articles).Error; err != nil {
 		if err != gorm.ErrRecordNotFound {
-			return http.StatusNotFound, common.ARTICLE_NOT_FOUND, nil
+			return http.StatusNotFound, common.ARTICLE_NOT_FOUND, data
 		}
 		c.Log.Errorf(common.SYSTEM_ERROR_LOG, "Fail to get Articles (database)", err)
-		return http.StatusInternalServerError, common.FAIL, nil
+		return http.StatusInternalServerError, common.FAIL, data
 	}
-	//_ = utils.RedisSet(fmt.Sprintf(QUERY_ARTICLES_BY_PAGE_KEY, pageNum - 1), data)
+	//c.Db.Raw("SELECT count(*) AS totalArticles FROM article").Scan(&data.TotalArticles);
 	return http.StatusOK, common.SUCCESS, data
 }
 

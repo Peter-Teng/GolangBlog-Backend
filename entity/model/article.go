@@ -31,3 +31,8 @@ type ArticleVO struct {
 	Description      string
 	status           int8
 }
+
+type MainData struct {
+	Articles      []ArticleVO
+	TotalArticles int
+}

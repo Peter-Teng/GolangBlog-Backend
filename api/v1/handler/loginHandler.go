@@ -35,12 +35,13 @@ func AuthorLogin(c *gin.Context) {
 		c.Abort()
 		return
 	}
-	status, code, token := service.AuthorLogin(data.Nickname, data.Password)
+	status, code, token, info := service.AuthorLogin(data.Nickname, data.Password)
 	if status < 300 {
 		c.JSON(status, gin.H{
-			"code":    code,
-			"message": common.Message[code],
-			"token":   token,
+			"code":     code,
+			"message":  common.Message[code],
+			"token":    token,
+			"userInfo": info,
 		})
 	} else {
 		c.JSON(status, entity.NewResponseObject(code, common.Message[code]))
