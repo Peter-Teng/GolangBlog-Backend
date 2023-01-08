@@ -1,2 +1,2 @@
-# MarvelousBlog-Backend
-A back-end of my blog application.
+# GOLang Blog-Backend
+A back-end of a simple blog application.
